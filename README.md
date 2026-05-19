@@ -10,6 +10,7 @@ This is my personal sandbox for random practice projects, small demos, and exper
 | [part1.1](./part1.1/) | |
 | [trying-web](./trying-web/) | |
 | [25coding_work](./25coding_work/) | |
+| [meituan-hackathon](./meituan-hackathon/) | 美团黑客松 - 外卖配送任务分配优化 |
 
 ## Commit 规范
 
