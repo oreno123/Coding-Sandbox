@@ -1,0 +1,401 @@
+# 🎯 Anlo - 页面结构化工具
+
+**现代化版本：TypeScript + React + Material-UI + Webpack**
+
+一个强大的浏览器侧边栏插件，用于扫描、记录和重新定位网页中的可提取元素（输入框、文本框、选择框显示值等）。特别适用于那些动态生成ID、难以定位元素的"烂网页"自动化操作和数据提取场景。
+
+## 📋 项目特点
+
+- ✅ **TypeScript** - 完整的类型安全
+- ⚛️ **React 18** - 现代化 UI 框架
+- 🎨 **Material-UI 5** - 优雅的 Material Design 组件库
+- 📦 **Webpack 5** - 优化的构建打包
+- 🎨 **组件化设计** - 易于维护和扩展
+- 🔄 **双向消息通信** - Sidepanel ↔ Content Script ↔ Background
+- 📐 **智能定位** - 自动生成稳定的选择器
+- 🔍 **多元素支持** - 支持 input、textarea、button、显示元素（select-display、text-display）
+- ✨ **Overlay 高亮** - 固定定位覆盖层，支持隐藏元素高亮
+- 🌊 **呼吸灯动画** - 60fps 流畅脉冲动画，智能性能优化
+- 🖼️ **复刻页面预览** - 可视化页面布局，点击预览元素即可高亮真实页面
+
+## 🏗️ 项目结构
+
+```
+Anlo/
+├── src/
+│   ├── types/                      # TypeScript 类型定义
+│   │   └── index.ts                # 核心类型：ElementType, SavedConfig, ExtractResult 等
+│   ├── utils/                      # 工具函数
+│   │   ├── selectorGenerator.ts    # 稳定选择器生成算法
+│   │   ├── messaging.ts            # 消息通信封装
+│   │   ├── overlay-manager.ts      # Overlay 高亮管理（呼吸灯动画）
+│   │   └── replicaGenerator.ts     # 复刻页面数据生成
+│   ├── scripts/                    # 脚本文件
+│   │   ├── content.ts              # 内容脚本（注入到页面，核心逻辑）
+│   │   └── background.ts           # 后台服务
+│   └── sidepanel/                  # 侧边栏 UI
+│       ├── index.tsx               # React 入口
+│       ├── App.tsx                 # 主应用（状态管理 + 消息协调）
+│       ├── index.html              # HTML 模板
+│       └── components/             # React 组件
+│           ├── ScanSection.tsx     # 扫描功能区
+│           ├── SelectSection.tsx   # 选择元素区
+│           ├── ConfigSection.tsx   # 配置管理区
+│           ├── UtilSection.tsx     # 工具与设置区
+│           └── ReplicaPreview.tsx  # 复刻页面预览
+├── public/                         # 静态资源
+│   ├── manifest.json               # 插件配置文件
+│   └── icons/                      # 插件图标（16x16, 48x48, 128x128）
+├── dist/                           # Webpack 构建输出
+├── webpack.config.js               # Webpack 配置
+├── tsconfig.json                   # TypeScript 配置
+├── package.json                    # 项目依赖
+├── guide.md                        # 核心技术原理文档
+└── README.md                       # 项目说明文档
+```
+
+## 🚀 快速开始
+
+### 1. 安装依赖
+
+```bash
+npm install
+```
+
+### 2. 开发模式（自动监听变更）
+
+```bash
+npm run watch
+```
+
+或者构建一次：
+
+```bash
+npm run build:dev
+```
+
+### 3. 生产构建
+
+```bash
+npm run build
+```
+
+### 4. 安装到浏览器
+
+#### Chrome / Edge:
+1. 打开扩展管理页面：
+   - Chrome: `chrome://extensions/`
+   - Edge: `edge://extensions/`
+
+2. 开启右上角的**"开发者模式"**
+
+3. 点击**"加载已解压的扩展程序"**
+
+4. 选择 `dist` 文件夹
+
+5. 完成！🎉
+
+## 📖 核心模块说明
+
+### 🔤 类型定义（`src/types/index.ts`）
+
+定义了整个系统的数据结构：
+- `ElementType` - 元素类型枚举（input、button、select-display、text-display）
+- `InputInfo` - 扫描的元素信息（包含 buttonText、disabled 等）
+- `SavedConfig` - 保存的配置（包含 containerSelector、label、buttonText 等）
+- `ExtractResult` - 提取结果（元素引用 + 值 + 查找方式）
+- `ReplicaElementData` - 复刻页面元素数据（位置、尺寸、类型）
+- `Message` - 消息格式
+- `ContentScriptAPI` - Content Script API 接口定义
+
+### 🎨 选择器生成器（`src/utils/selectorGenerator.ts`）
+
+核心的选择器生成逻辑：
+- `generateStableSelector()` - 生成稳定选择器
+- `findElementBySelector()` - 根据选择器查找元素
+- 智能判断是否需要 nth-child
+- 自动筛选稳定的 class 和属性
+- 优先使用语义属性（data-name、data-field 等）
+
+### ✨ Overlay 管理器（`src/utils/overlay-manager.ts`）
+
+固定定位覆盖层高亮系统：
+- `createOverlay()` - 创建固定定位的高亮覆盖层
+- `updateOverlayColor()` - 更新高亮颜色
+- `removeOverlay()` - 移除指定高亮
+- `clearAll()` - 清除所有高亮
+- 自动处理隐藏元素（查找关联的可见元素）
+- 实时跟踪滚动和窗口调整
+- 60fps 呼吸灯脉冲动画（智能性能优化）
+
+### 🖼️ 复刻页面生成器（`src/utils/replicaGenerator.ts`）
+
+复刻页面数据生成工具：
+- `generateFromExtractResults()` - 从提取结果生成复刻数据
+- 计算元素在页面中的百分比位置和尺寸
+- 支持响应式布局
+
+### 💬 消息通信（`src/utils/messaging.ts`）
+
+处理不同脚本间的通信：
+- `sendToContent()` - 从 sidepanel 发送到 content script
+- `sendToBackground()` - 发送到后台服务
+- `onMessage()` - 监听消息
+- `executeInContent()` - 在页面上下文执行函数
+
+### 📄 内容脚本（`src/scripts/content.ts`）
+
+注入到每个网页的脚本，核心业务逻辑：
+- `scanAll()` - 扫描所有可提取元素（input、textarea、button、显示元素等）
+- `getElementType()` - 判断元素类型（支持识别按钮样式的 `<a>` 标签）
+- `getElementValue()` - 根据元素类型提取值
+- `saveByIndexes()` - 根据索引保存配置（生成稳定选择器 + 元数据）
+- `extractByConfig()` - 根据配置重新提取元素（多层次查找策略）
+- `generateReplicaData()` - 生成复刻页面数据（计算元素位置）
+- `highlightByIndex()` - 高亮扫描结果中的指定元素
+- `highlightByConfigIndex()` - 高亮配置中的指定元素（支持页面刷新后）
+- `clearHighlight()` - 清除所有高亮
+- 使用 `OverlayManager` 进行固定定位高亮
+
+### 🎯 后台服务（`src/scripts/background.ts`）
+
+处理插件级别的事件：
+- 监听插件图标点击
+- 管理侧边栏行为
+- 处理标签页变化
+
+### ⚛️ React 组件（`src/sidepanel/`）
+
+现代化的 UI：
+- `App.tsx` - 主应用逻辑和状态管理（协调所有组件，处理消息通信）
+- `components/ScanSection.tsx` - 扫描功能区（触发扫描，显示扫描统计）
+- `components/SelectSection.tsx` - 选择元素区（展示元素列表，支持多选）
+- `components/ConfigSection.tsx` - 配置管理区（显示已保存配置，支持删除）
+- `components/UtilSection.tsx` - 工具与设置区（提取、清除、复制等）
+- `components/ReplicaPreview.tsx` - 复刻页面预览（可视化布局，点击高亮）
+
+## 🔄 工作流程
+
+### 1️⃣ 扫描阶段
+
+```typescript
+// 打开 sidepanel
+// 点击"扫描当前页面"
+// ↓
+// Content Script 执行 scanAll()
+// 扫描 input、textarea、button、显示元素等
+// ↓
+// 返回所有可提取元素信息
+```
+
+### 2️⃣ 选择阶段
+
+```typescript
+// 在列表中点击勾选需要的元素
+// ↓
+// React 状态更新，UI 实时反映
+// ↓
+// 点击"保存配置"
+```
+
+### 3️⃣ 保存阶段
+
+```typescript
+// Content Script 执行 saveByIndexes(indexes)
+// ↓
+// 生成稳定的容器选择器
+// 提取元素类型、data-name、xtype、buttonText 等元数据
+// ↓
+// 保存到 SavedConfig[]
+// ↓
+// 存储到浏览器存储（LocalStorage/Storage API）
+```
+
+### 4️⃣ 提取与预览阶段
+
+```typescript
+// 刷新页面后
+// 打开 sidepanel
+// 点击"根据配置重新提取元素"
+// ↓
+// Content Script 执行 extractByConfig(config)
+// ↓
+// 使用多层次的查找策略：
+//   针对 input/textarea:
+//     1. 容器选择器 + label 验证
+//     2. name 属性 + label 验证
+//     3. placeholder 查找
+//   针对 button:
+//     1. 容器选择器 + buttonText 验证
+//     2. buttonText 全局查找
+//     3. name 属性匹配
+//   针对显示元素:
+//     1. 容器选择器 + label 验证
+//     2. data-name 属性 + label 验证
+//     3. xtype 属性匹配
+// ↓
+// 生成复刻页面预览
+// 点击预览中的元素 → 真实页面高亮（红色框）
+```
+
+## 🔧 开发指南
+
+### 添加新的消息类型
+
+在 `src/scripts/content.ts` 中的 `initializeListeners()` 方法中添加新的 case：
+
+```typescript
+case 'NEW_ACTION':
+  response = this.newAction(payload);
+  break;
+```
+
+### 创建新的 React 组件
+
+1. 在 `src/sidepanel/components/` 中创建文件
+2. 使用 TypeScript 定义 Props 接口
+3. 在 `App.tsx` 中导入和使用
+
+```typescript
+import { Paper, Button, Typography } from '@mui/material';
+
+interface NewComponentProps {
+  prop1: string;
+  prop2: () => void;
+}
+
+export const NewComponent: React.FC<NewComponentProps> = ({ prop1, prop2 }) => {
+  return (
+    <Paper sx={{ p: 2, mb: 2 }}>
+      <Typography variant="h6">{prop1}</Typography>
+      <Button onClick={prop2}>Click me</Button>
+    </Paper>
+  );
+};
+```
+
+### 使用 Material-UI
+
+所有 UI 组件都使用 Material-UI。主题已在 `src/sidepanel/index.tsx` 中配置：
+
+- **颜色主题**: 自定义的蓝色、绿色、灰色调板
+- **排版**: 使用 Roboto 字体
+- **响应式设计**: 所有组件都支持响应式布局
+- **图标**: 使用 `@mui/icons-material` 中的 Material Icons
+
+在组件中使用 `sx` prop 进行样式定制：
+
+```typescript
+<Box sx={{ 
+  p: 2,           // padding
+  mb: 2,          // marginBottom
+  bgcolor: 'primary.main',  // backgroundColor
+  borderRadius: 1 // borderRadius
+}}>
+  内容
+</Box>
+```
+
+### 调试技巧
+
+1. **查看 Console 日志**
+   - Sidepanel: 右键 → 检查
+   - Content Script: 在网页上右键 → 检查 → Console
+   - Background: `chrome://extensions/` → Anlo → 背景页面
+
+2. **设置断点**
+   - 在 DevTools 中设置断点
+   - 使用 `debugger;` 语句
+
+3. **查看消息传递**
+   - 在 `messaging.ts` 中添加日志
+   - 在 content.ts 中添加日志
+
+## 📦 构建输出
+
+运行 `npm run build` 后，`dist/` 文件夹包含：
+
+```
+dist/
+├── manifest.json      # 插件配置
+├── sidepanel.html     # 侧边栏页面
+├── sidepanel.js       # 侧边栏脚本（包含 React）
+├── content.js         # 内容脚本
+├── background.js      # 后台脚本
+└── icons/             # 插件图标
+```
+
+## 🎯 后续功能迭代方向
+
+### 短期计划
+- [x] 支持多种元素类型（input、textarea、显示元素）
+- [ ] 支持更多元素类型（按钮、链接、原生 select 等）
+- [ ] 本地存储优化（使用 IndexedDB）
+- [ ] 配置管理界面增强
+- [ ] 快捷键支持
+
+### 中期计划
+- [ ] 云端配置同步
+- [ ] 配置模板市场
+- [ ] AI 辅助定位
+- [ ] 团队协作功能
+
+### 长期规划
+- [ ] 全网页自动化平台
+- [ ] API 接口暴露
+- [ ] 插件市场生态
+
+## 💡 技术栈
+
+- **语言**: TypeScript 5.3
+- **UI 框架**: React 18
+- **组件库**: Material-UI 5
+- **样式引擎**: Emotion
+- **构建工具**: Webpack 5
+- **API**: Chrome Extension API Manifest V3
+- **图标库**: Material Icons
+
+## 📝 注意事项
+
+1. **权限声明**：需要 `<all_urls>` 权限才能在所有网页上运行
+
+2. **Content Security Policy**：某些网站可能有严格的 CSP，会阻止脚本运行
+
+3. **性能**: 扫描大量输入框时可能会有延迟，考虑添加分页
+
+4. **跨域**: Content Script 只能访问当前标签页的 DOM
+
+## 🤝 贡献指南
+
+欢迎贡献代码！请：
+
+1. Fork 此项目
+2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 提交 Pull Request
+
+## 📄 许可证
+
+MIT License
+
+## 🙋 常见问题
+
+### Q: 如何在开发时快速重新加载？
+A: 在扩展管理页面点击"刷新"按钮，或设置自动重新加载。
+
+### Q: TypeScript 编译错误？
+A: 运行 `npm run clean && npm run build` 重新构建。
+
+### Q: 侧边栏不显示？
+A: 确保 manifest.json 中的 `side_panel` 配置正确，并检查 sidepanel.html。
+
+### Q: Content Script 没有运行？
+A: 检查浏览器 Console，查看是否有错误消息。
+
+---
+
+**Made with ❤️ for web automation lovers**
+
+*Anlo - 页面结构化工具，让动态网页的数据提取和自动化变得简单*
+

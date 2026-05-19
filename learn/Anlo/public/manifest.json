@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "Anlo - 页面结构化工具",
+  "version": "2.2.0",
+  "description": "智能页面元素提取工具 - 扫描、记录和重新定位网页可提取元素（输入框、文本框、显示元素等），特别适用于动态网页的数据提取和自动化操作",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "sidePanel",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "action": {
+    "default_title": "打开 Anlo 页面结构化工具"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
+

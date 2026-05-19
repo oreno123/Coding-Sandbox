@@ -3,17 +3,31 @@
 This is my personal sandbox for random practice projects, small demos, and experiments.
 这是我的个人杂物堆，用来存放练手代码、小Demo和各种实验性项目。
 
-## Projects
+## 📂 项目结构
+
+```
+Coding-Sandbox/
+├── learn/            # 学习项目
+└── my-projects/      # 自己的项目
+```
+
+## 🎓 学习项目
 
 | 目录 | 说明 |
 |------|------|
-| [part1.1](./part1.1/) | |
-| [trying-web](./trying-web/) | |
-| [25coding_work](./25coding_work/) | |
-| [meituan-hackathon](./meituan-hackathon/) | 美团黑客松 - 外卖配送任务分配优化 |
-| [前后端](./%E5%89%8D%E5%90%8E%E7%AB%AF/) | |
-| [LevitateBoat](./LevitateBoat/) | 浏览器扩展 - 本地记忆+LLM 对话，保护隐私的长期记忆助手 |
-| [Madoka](./Madoka/) | Chrome 侧边栏扩展 - 智能搜索助手，支持通义千问对话与 Obsidian 同步 |
+| [Anlo](./learn/Anlo/) | Chrome 扩展 - 网页元素扫描与定位，解决动态网页元素提取难题 |
+
+## 🚀 我的项目
+
+| 目录 | 说明 |
+|------|------|
+| [part1.1](./my-projects/part1.1/) | |
+| [trying-web](./my-projects/trying-web/) | |
+| [25coding_work](./my-projects/25coding_work/) | |
+| [meituan-hackathon](./my-projects/meituan-hackathon/) | 美团黑客松 - 外卖配送任务分配优化 |
+| [前后端](./my-projects/%E5%89%8D%E5%90%8E%E7%AB%AF/) | |
+| [LevitateBoat](./my-projects/LevitateBoat/) | 浏览器扩展 - 本地记忆+LLM 对话，保护隐私的长期记忆助手 |
+| [Madoka](./my-projects/Madoka/) | Chrome 侧边栏扩展 - 智能搜索助手，支持通义千问对话与 Obsidian 同步 |
 
 ## Commit 规范
 
@@ -24,6 +38,6 @@ type(project): 描述
 **type**: `feat` `fix` `refactor` `docs` `chore`
 
 **示例**:
-- `feat(trying-web): 添加登录页面`
-- `fix(part1.1): 修复排序边界问题`
-- `chore(25coding_work): 更新依赖`
+- `feat(Anlo): 添加元素选择器优化`
+- `fix(LevitateBoat): 修复记忆索引问题`
+- `chore(Madoka): 更新依赖`
