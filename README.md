@@ -13,6 +13,7 @@ This is my personal sandbox for random practice projects, small demos, and exper
 | [meituan-hackathon](./meituan-hackathon/) | 美团黑客松 - 外卖配送任务分配优化 |
 | [前后端](./%E5%89%8D%E5%90%8E%E7%AB%AF/) | |
 | [LevitateBoat](./LevitateBoat/) | 浏览器扩展 - 本地记忆+LLM 对话，保护隐私的长期记忆助手 |
+| [Madoka](./Madoka/) | Chrome 侧边栏扩展 - 智能搜索助手，支持通义千问对话与 Obsidian 同步 |
 
 ## Commit 规范
 
