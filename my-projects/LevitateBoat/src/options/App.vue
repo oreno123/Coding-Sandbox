@@ -168,7 +168,7 @@ const isDark = computed(() => theme.value === 'dark')
 const config = ref<LLMConfig>({
   provider: 'custom',
   baseUrl: 'https://api.deepseek.com/v1',
-  apiKey: 'sk-e2b35616e9604a60be3f073001cbd539',
+  apiKey: '',
   chatModel: 'deepseek-chat',
   embedModel: 'nomic-embed-text',
   timeout: 60000
