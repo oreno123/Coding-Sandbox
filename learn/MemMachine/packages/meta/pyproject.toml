@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel", "setuptools-scm>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "memmachine"
+dynamic = ["version"]
+description = "Meta-package for MemMachine: Installs both client and server."
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "memmachine-client",
+    "memmachine-server"
+]
+
+[project.urls]
+Homepage = "https://github.com/memmachine/memmachine"
+
+[tool.setuptools]
+packages = []
+
+[tool.setuptools_scm]
+root = "../.."
