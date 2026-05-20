@@ -1,0 +1,21 @@
+{
+  "name": "a11y-browser-extension",
+  "version": "1.0.0",
+  "description": "浏览器无障碍（A11y）扩展，用于提取网页DOM语义树、优化无障碍体验",
+  "main": "background.js",
+  "author": "你的名字",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+  "build": "npm run clean && mkdir dist && cpy manifest.json background.js popup.html popup.js dom/ dist/ && powershell Compress-Archive -Path dist/* -DestinationPath a11y-extension.zip -Force",
+  "dev": "rimraf .dev && mkdir .dev && cpy manifest.json background.js popup.html popup.js dom/ .dev/",
+  "clean": "rimraf dist .dev a11y-extension.zip",
+  "format": "prettier --write \"**/*.{js,html,json}\""
+},
+  "devDependencies": {
+    "cpy-cli": "^5.0.0",
+    "prettier": "^3.2.5",
+    "rimraf": "^5.0.5",
+    "zip-a-folder": "^3.1.9"
+  }
+}

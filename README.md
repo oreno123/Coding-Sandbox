@@ -17,6 +17,7 @@ Coding-Sandbox/
 |------|------|
 | [Anlo](./learn/Anlo/) | Chrome 扩展 - 网页元素扫描与定位，解决动态网页元素提取难题 |
 | [MemMachine](./learn/MemMachine/) | 开源 AI Agent 长期记忆层 - 5行代码让 AI 拥有持久记忆 |
+| [A11y](./learn/A11y/) | Chrome 扩展 - 无障碍 DOM 序列化与浏览器自动化 |
 
 ## 🚀 我的项目
 
