@@ -20,6 +20,7 @@ Coding-Sandbox/
 | [A11y](./learn/A11y/) | Chrome 扩展 - 无障碍 DOM 序列化与浏览器自动化 |
 | [letta](./learn/letta/) | Letta - LLM Agent 长期记忆与自定义工具框架 |
 | [memU](./learn/memU/) | 24/7 主动式 AI 记忆框架，支持多模态长期记忆与意图预测 |
+| [yuque-export](./learn/yuque-export/) | Chrome 扩展 - 语雀增强导出，一键导出文档到 Obsidian（视频下载+替换） |
 
 ## 🚀 我的项目
 
