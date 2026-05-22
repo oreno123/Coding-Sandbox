@@ -1,0 +1,1533 @@
+/**
+ * Chat Context
+ * Global state management with multi-conversation support
+ */
+
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
+import type {
+  ChatStatus,
+  Message,
+  BackgroundMessage,
+  SearchResult,
+  SearchEngine,
+  PageContent,
+  GitHubRepoItem,
+} from "../../shared/types";
+import type {
+  ActionSpace,
+  ActionPlanItem,
+  ActionResult,
+  ActionParams,
+  ActionStatus,
+  Action,
+} from "../../shared/action-types";
+import type {
+  AnyContextRef,
+  AttachedContext,
+  TabRef,
+  BookmarkRef,
+  HistoryRef,
+  PageRef,
+} from "../../shared/context-types";
+import { emptyAttachedContext } from "../../shared/context-types";
+import { onBackgroundMessage, sendToBackground } from "../../shared/messaging";
+import {
+  getMCPToolToServerForSession,
+  callMCPToolOnServer,
+} from "../lib/mcpClient";
+import { FORBIDDEN_TOOL_PATTERNS } from "../../shared/constants";
+import type { Theme } from "../styles/theme";
+import { initializeTheme, setTheme as setDocTheme } from "../styles/theme";
+
+// ============ Types ============
+
+export type AppMode = "chat" | "agent";
+export type ViewState = "chat" | "settings" | "linkSummary" | "memory";
+
+// Link Summary State
+export interface LinkSummaryPoint {
+  summary: string;
+  verbatimQuote?: string;
+  selectors?: string[];
+  contextBefore?: string;
+  contextAfter?: string;
+}
+
+export interface LinkSummaryState {
+  url: string;
+  summary: string;
+  points: LinkSummaryPoint[];
+  loading: boolean;
+  error: string | null;
+}
+
+// Conversation type
+export interface Conversation {
+  id: string;
+  title: string;
+  mode: AppMode;
+  messages: Message[];
+  createdAt: number;
+  updatedAt: number;
+  pageContent: PageContent | null;
+  // Agent state per conversation
+  agent: AgentState;
+  // Context references (like Cursor's @file)
+  attachedContext: AttachedContext;
+  // Memory blocks selected for this conversation
+  selectedBlocks: string[];
+}
+
+// Agent state
+interface AgentState {
+  isAgentMode: boolean;
+  actionSpace: ActionSpace | null;
+  actionPlan: ActionPlanItem[];
+  currentActionIndex: number;
+  isExecuting: boolean;
+  executionHistory: ActionResult[];
+}
+
+// App state
+interface AppState {
+  // Multi-conversation
+  conversations: Conversation[];
+  activeConversationId: string | null;
+
+  // UI state
+  theme: Theme;
+  view: ViewState;
+
+  // Chat state
+  status: ChatStatus;
+  isResponding: boolean;
+  searchStatus: string | null;
+  currentEngine: SearchEngine;
+  forceSearch: boolean;
+  forceGitHubSearch: boolean;
+
+  // Link Summary state
+  linkSummary: LinkSummaryState | null;
+}
+
+// Initial agent state
+const initialAgentState: AgentState = {
+  isAgentMode: false,
+  actionSpace: null,
+  actionPlan: [],
+  currentActionIndex: 0,
+  isExecuting: false,
+  executionHistory: [],
+};
+
+// Create new conversation
+function createConversation(mode: AppMode = "chat"): Conversation {
+  return {
+    id: `conv-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+    title: "New Conversation",
+    mode,
+    messages: [],
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    pageContent: null,
+    agent: { ...initialAgentState },
+    attachedContext: { ...emptyAttachedContext },
+    selectedBlocks: [],
+  };
+}
+
+// Initial state
+const initialConversation = createConversation();
+const initialState: AppState = {
+  conversations: [initialConversation],
+  activeConversationId: initialConversation.id,
+  theme: "light",
+  view: "chat",
+  status: "idle",
+  isResponding: false,
+  searchStatus: null,
+  currentEngine: "bing",
+  forceSearch: false,
+  forceGitHubSearch: false,
+  linkSummary: null,
+};
+
+// ============ Actions ============
+
+type AppAction =
+  // Conversation actions
+  | { type: "DELETE_MESSAGE"; payload: string }
+  | { type: "SET_CONVERSATIONS"; payload: Conversation[] }
+  | { type: "ADD_CONVERSATION"; payload: Conversation }
+  | { type: "DELETE_CONVERSATION"; payload: string }
+  | { type: "SET_ACTIVE_CONVERSATION"; payload: string }
+  | {
+      type: "UPDATE_CONVERSATION";
+      payload: { id: string; updates: Partial<Conversation> };
+    }
+  | {
+      type: "UPDATE_CONVERSATION_TITLE";
+      payload: { id: string; title: string };
+    }
+  // Message actions (for active conversation)
+  | { type: "ADD_MESSAGE"; payload: Message }
+  | {
+      type: "UPDATE_MESSAGE";
+      payload: { id: string; content: string; githubItems?: GitHubRepoItem[] };
+    }
+  | { type: "DELETE_MESSAGE"; payload: string }
+  | {
+      type: "DELETE_MESSAGES_RANGE";
+      payload: { startIndex: number; endIndex: number };
+    }
+  | { type: "CLEAR_MESSAGES" }
+  | {
+      type: "FINISH_RESPONSE";
+      payload:
+        | string
+        | { content: string; githubItems?: GitHubRepoItem[]; messageId?: string };
+    }
+  // UI actions
+  | { type: "SET_THEME"; payload: Theme }
+  | { type: "SET_VIEW"; payload: ViewState }
+  | { type: "SET_MODE"; payload: AppMode }
+  // Chat state actions
+  | { type: "SET_STATUS"; payload: ChatStatus }
+  | { type: "SET_ENGINE"; payload: SearchEngine }
+  | { type: "SET_PAGE_CONTENT"; payload: PageContent | null }
+  | { type: "SET_SEARCH_STATUS"; payload: string | null }
+  | { type: "SET_FORCE_SEARCH"; payload: boolean }
+  | { type: "SET_FORCE_GITHUB_SEARCH"; payload: boolean }
+  // Agent actions
+  | { type: "SET_AGENT_MODE"; payload: boolean }
+  | { type: "SET_ACTION_SPACE"; payload: ActionSpace | null }
+  | { type: "SET_ACTION_PLAN"; payload: ActionPlanItem[] }
+  | { type: "SET_CURRENT_ACTION_INDEX"; payload: number }
+  | { type: "SET_EXECUTING"; payload: boolean }
+  | {
+      type: "UPDATE_ACTION_STATUS";
+      payload: {
+        actionId: string;
+        status: ActionStatus;
+        result?: ActionResult;
+      };
+    }
+  | { type: "ADD_EXECUTION_RESULT"; payload: ActionResult }
+  | { type: "RESET_AGENT" }
+  // Context reference actions
+  | { type: "ADD_CONTEXT_REF"; payload: AnyContextRef }
+  | { type: "REMOVE_CONTEXT_REF"; payload: string }
+  | { type: "CLEAR_CONTEXT_REFS" }
+  | {
+      type: "SET_CONTEXT_RESOLVING";
+      payload: { id: string; resolving: boolean };
+    }
+  | { type: "SET_RESOLVED_CONTENT"; payload: { id: string; content: string } }
+  // Link Summary actions
+  | { type: "SET_LINK_SUMMARY"; payload: LinkSummaryState }
+  | { type: "CLEAR_LINK_SUMMARY" }
+  // Memory block selection actions
+  | { type: "SET_SELECTED_BLOCKS"; payload: string[] }
+  | { type: "TOGGLE_BLOCK"; payload: string }
+  // Hydration
+  | { type: "HYDRATE"; payload: Partial<AppState> };
+
+// Helper to get active conversation
+function getActiveConversation(state: AppState): Conversation | null {
+  return (
+    state.conversations.find((c) => c.id === state.activeConversationId) || null
+  );
+}
+
+// Helper to update active conversation
+function updateActiveConversation(
+  state: AppState,
+  updater: (conv: Conversation) => Conversation,
+): AppState {
+  const activeConv = getActiveConversation(state);
+  if (!activeConv) return state;
+
+  return {
+    ...state,
+    conversations: state.conversations.map((c) =>
+      c.id === activeConv.id ? updater(c) : c,
+    ),
+  };
+}
+
+// ============ Reducer ============
+
+function appReducer(state: AppState, action: AppAction): AppState {
+  switch (action.type) {
+    // Delete message action
+    case "DELETE_MESSAGE":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        messages: conv.messages.filter((m) => m.id !== action.payload),
+        updatedAt: Date.now(),
+      }));
+
+    // Conversation actions
+    case "SET_CONVERSATIONS":
+      return { ...state, conversations: action.payload };
+
+    case "ADD_CONVERSATION":
+      return {
+        ...state,
+        conversations: [action.payload, ...state.conversations],
+        activeConversationId: action.payload.id,
+      };
+
+    case "DELETE_CONVERSATION": {
+      const remaining = state.conversations.filter(
+        (c) => c.id !== action.payload,
+      );
+      const newActive =
+        remaining.length > 0
+          ? state.activeConversationId === action.payload
+            ? remaining[0].id
+            : state.activeConversationId
+          : null;
+
+      // If no conversations left, create a new one
+      if (remaining.length === 0) {
+        const newConv = createConversation();
+        return {
+          ...state,
+          conversations: [newConv],
+          activeConversationId: newConv.id,
+        };
+      }
+
+      return {
+        ...state,
+        conversations: remaining,
+        activeConversationId: newActive,
+      };
+    }
+
+    case "SET_ACTIVE_CONVERSATION":
+      return { ...state, activeConversationId: action.payload };
+
+    case "UPDATE_CONVERSATION":
+      return {
+        ...state,
+        conversations: state.conversations.map((c) =>
+          c.id === action.payload.id
+            ? { ...c, ...action.payload.updates, updatedAt: Date.now() }
+            : c,
+        ),
+      };
+
+    case "UPDATE_CONVERSATION_TITLE":
+      return {
+        ...state,
+        conversations: state.conversations.map((c) =>
+          c.id === action.payload.id
+            ? { ...c, title: action.payload.title, updatedAt: Date.now() }
+            : c,
+        ),
+      };
+
+    // Message actions
+    case "ADD_MESSAGE":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        messages: [...conv.messages, action.payload],
+        updatedAt: Date.now(),
+        // Auto-generate title from first user message
+        title:
+          conv.messages.length === 0 && action.payload.role === "user"
+            ? action.payload.content.slice(0, 30) +
+              (action.payload.content.length > 30 ? "..." : "")
+            : conv.title,
+      }));
+
+    case "UPDATE_MESSAGE":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        messages: conv.messages.map((msg) =>
+          msg.id === action.payload.id
+            ? {
+                ...msg,
+                content: action.payload.content,
+                ...(action.payload.githubItems != null && {
+                  githubItems: action.payload.githubItems,
+                }),
+              }
+            : msg,
+        ),
+      }));
+
+    case "DELETE_MESSAGE":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        messages: conv.messages.filter((m) => m.id !== action.payload),
+        updatedAt: Date.now(),
+      }));
+
+    case "DELETE_MESSAGES_RANGE":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        messages: conv.messages.filter(
+          (_, index) =>
+            index < action.payload.startIndex || index > action.payload.endIndex
+        ),
+        updatedAt: Date.now(),
+      }));
+
+    case "CLEAR_MESSAGES":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        messages: [],
+        title: "New Conversation",
+      }));
+
+    case "FINISH_RESPONSE": {
+      const payload = action.payload;
+      const content = typeof payload === "string" ? payload : payload.content;
+      const githubItems =
+        typeof payload === "object" ? payload.githubItems : undefined;
+      const targetId =
+        typeof payload === "object" ? payload.messageId : undefined;
+      return {
+        ...updateActiveConversation(state, (conv) => ({
+    ...conv,
+    messages: conv.messages.map((msg) => {
+      const shouldFinish = targetId
+        ? msg.id === targetId && msg.isStreaming
+        : msg.isStreaming;
+      return shouldFinish
+        ? {
+            ...msg,
+            content,
+            ...(githubItems != null && { githubItems }), // 条件注入 githubItems
+            isStreaming: false, // 结束流状态
+          }
+        : msg; // 保持原样
+    }),
+  })),
+  status: "idle", // 通用状态重置
+  isResponding: false,
+  searchStatus: null,
+  forceSearch: false,
+  forceGitHubSearch: false, // 确保保留此字段（来自第一段代码）
+      };
+    }
+
+    // UI actions
+    case "SET_THEME":
+      return { ...state, theme: action.payload };
+
+    case "SET_VIEW":
+      return { ...state, view: action.payload };
+
+    case "SET_MODE":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        mode: action.payload,
+        agent:
+          action.payload === "agent" ? conv.agent : { ...initialAgentState },
+      }));
+
+    // Chat state actions
+    case "SET_STATUS":
+      return {
+        ...state,
+        status: action.payload,
+        isResponding: action.payload !== "idle",
+      };
+
+    case "SET_ENGINE":
+      return { ...state, currentEngine: action.payload };
+
+    case "SET_PAGE_CONTENT":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        pageContent: action.payload,
+      }));
+
+    case "SET_SEARCH_STATUS":
+      return { ...state, searchStatus: action.payload };
+
+    case "SET_FORCE_SEARCH":
+      return {
+        ...state,
+        forceSearch: action.payload,
+        forceGitHubSearch: action.payload ? false : state.forceGitHubSearch,
+      };
+
+    case "SET_FORCE_GITHUB_SEARCH":
+      return {
+        ...state,
+        forceGitHubSearch: action.payload,
+        forceSearch: action.payload ? false : state.forceSearch,
+      };
+
+    // Agent actions
+    case "SET_AGENT_MODE":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        agent: { ...conv.agent, isAgentMode: action.payload },
+      }));
+
+    case "SET_ACTION_SPACE":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        agent: { ...conv.agent, actionSpace: action.payload },
+      }));
+
+    case "SET_ACTION_PLAN":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        agent: {
+          ...conv.agent,
+          actionPlan: action.payload,
+          currentActionIndex: 0,
+        },
+      }));
+
+    case "SET_CURRENT_ACTION_INDEX":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        agent: { ...conv.agent, currentActionIndex: action.payload },
+      }));
+
+    case "SET_EXECUTING":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        agent: { ...conv.agent, isExecuting: action.payload },
+      }));
+
+    case "UPDATE_ACTION_STATUS":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        agent: {
+          ...conv.agent,
+          actionPlan: conv.agent.actionPlan.map((item) =>
+            item.action.actionId === action.payload.actionId
+              ? {
+                  ...item,
+                  status: action.payload.status,
+                  result: action.payload.result,
+                }
+              : item,
+          ),
+        },
+      }));
+
+    case "ADD_EXECUTION_RESULT":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        agent: {
+          ...conv.agent,
+          executionHistory: [...conv.agent.executionHistory, action.payload],
+        },
+      }));
+
+    case "RESET_AGENT":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        agent: { ...initialAgentState },
+      }));
+
+    // Context reference actions
+    case "ADD_CONTEXT_REF":
+      return updateActiveConversation(state, (conv) => {
+        // 避免重复添加
+        if (conv.attachedContext.refs.some((r) => r.id === action.payload.id)) {
+          return conv;
+        }
+        return {
+          ...conv,
+          attachedContext: {
+            ...conv.attachedContext,
+            refs: [...conv.attachedContext.refs, action.payload],
+          },
+        };
+      });
+
+    case "REMOVE_CONTEXT_REF":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        attachedContext: {
+          ...conv.attachedContext,
+          refs: conv.attachedContext.refs.filter(
+            (r) => r.id !== action.payload,
+          ),
+          resolvedContent: Object.fromEntries(
+            Object.entries(conv.attachedContext.resolvedContent).filter(
+              ([k]) => k !== action.payload,
+            ),
+          ),
+          resolvingIds: conv.attachedContext.resolvingIds.filter(
+            (id) => id !== action.payload,
+          ),
+        },
+      }));
+
+    case "CLEAR_CONTEXT_REFS":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        attachedContext: { ...emptyAttachedContext },
+      }));
+
+    case "SET_CONTEXT_RESOLVING":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        attachedContext: {
+          ...conv.attachedContext,
+          resolvingIds: action.payload.resolving
+            ? [...conv.attachedContext.resolvingIds, action.payload.id]
+            : conv.attachedContext.resolvingIds.filter(
+                (id) => id !== action.payload.id,
+              ),
+        },
+      }));
+
+    case "SET_RESOLVED_CONTENT":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        attachedContext: {
+          ...conv.attachedContext,
+          resolvedContent: {
+            ...conv.attachedContext.resolvedContent,
+            [action.payload.id]: action.payload.content,
+          },
+          resolvingIds: conv.attachedContext.resolvingIds.filter(
+            (id) => id !== action.payload.id,
+          ),
+        },
+      }));
+
+    // Link Summary actions
+    case "SET_LINK_SUMMARY":
+      return {
+        ...state,
+        linkSummary: action.payload,
+        view: "linkSummary",
+      };
+
+    case "CLEAR_LINK_SUMMARY":
+      return {
+        ...state,
+        linkSummary: null,
+        view: "chat",
+      };
+
+    case "SET_SELECTED_BLOCKS":
+      return updateActiveConversation(state, (conv) => ({
+        ...conv,
+        selectedBlocks: action.payload,
+      }));
+
+    case "TOGGLE_BLOCK":
+      return updateActiveConversation(state, (conv) => {
+        const blocks = conv.selectedBlocks.includes(action.payload)
+          ? conv.selectedBlocks.filter((b) => b !== action.payload)
+          : [...conv.selectedBlocks, action.payload];
+        return {
+          ...conv,
+          selectedBlocks: blocks,
+        };
+      });
+
+    case "HYDRATE":
+      return { ...state, ...action.payload };
+
+    default:
+      return state;
+  }
+}
+
+// ============ Context ============
+
+interface ChatContextType {
+  state: AppState;
+  dispatch: React.Dispatch<AppAction>;
+
+  // Convenience getters
+  activeConversation: Conversation | null;
+  messages: Message[];
+  mode: AppMode;
+  agent: AgentState;
+  pageContent: PageContent | null;
+  attachedContext: AttachedContext;
+
+  // Conversation methods
+  createNewConversation: (mode?: AppMode) => string;
+  switchConversation: (id: string) => void;
+  deleteConversation: (id: string) => void;
+
+  // Message methods
+  addMessage: (message: Omit<Message, "id" | "timestamp">) => string;
+  updateMessage: (id: string, content: string) => void;
+  clearMessages: () => void;
+  deleteMessage: (id: string) => void;
+  deleteMessagePair: (assistantMessageId: string) => void;
+  regenerateMessage: (messageId: string) => void;
+
+  // UI methods
+  setView: (view: ViewState) => void;
+  setMode: (mode: AppMode) => void;
+  setTheme: (theme: Theme) => void;
+
+  // Chat methods
+  setEngine: (engine: SearchEngine) => void;
+  startResponse: () => string;
+  finishResponse: (content: string, githubItems?: GitHubRepoItem[]) => void;
+  stopResponse: () => void;
+  setSearchResults: (messageId: string, results: SearchResult[]) => void;
+
+  // Agent methods
+  extractActionSpace: () => Promise<ActionSpace | null>;
+  createActionPlan: (actions: Action[]) => void;
+  executeAction: (
+    actionId: string,
+    params?: ActionParams,
+  ) => Promise<ActionResult | null>;
+  confirmAction: (actionId: string) => Promise<void>;
+  skipAction: (actionId: string) => void;
+  cancelPlan: () => void;
+  highlightAction: (actionId: string, highlight: boolean) => Promise<void>;
+  resetAgent: () => void;
+
+  // Context reference methods
+  addContextRef: (ref: AnyContextRef) => void;
+  removeContextRef: (id: string) => void;
+  clearContextRefs: () => void;
+  resolveContextRef: (ref: AnyContextRef) => Promise<string>;
+  fetchTabs: (query?: string) => Promise<TabRef[]>;
+  fetchBookmarks: (query?: string) => Promise<BookmarkRef[]>;
+  fetchHistory: (query?: string, maxResults?: number) => Promise<HistoryRef[]>;
+  fetchCurrentPage: () => Promise<PageRef | null>;
+}
+
+const ChatContext = createContext<ChatContextType | null>(null);
+
+// ============ Provider ============
+
+export function ChatProvider({ children }: { children: React.ReactNode }) {
+  const [state, dispatch] = useReducer(appReducer, initialState);
+  const currentAssistantId = useRef<string | null>(null);
+  const responseGeneration = useRef(0);
+  const initialized = useRef(false);
+
+  // Convenience getters
+  const activeConversation = getActiveConversation(state);
+  const messages = activeConversation?.messages || [];
+  const mode = activeConversation?.mode || "chat";
+  const agent = activeConversation?.agent || initialAgentState;
+  const pageContent = activeConversation?.pageContent || null;
+  const attachedContext =
+    activeConversation?.attachedContext || emptyAttachedContext;
+
+  // Initialize from storage
+  useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
+
+    const init = async () => {
+      // Initialize theme
+      const theme = await initializeTheme();
+      dispatch({ type: "SET_THEME", payload: theme });
+
+      // Load conversations from storage
+      try {
+        const result = await chrome.storage.local.get([
+          "conversations",
+          "activeConversationId",
+        ]);
+
+        if (result.conversations && result.conversations.length > 0) {
+          dispatch({
+            type: "SET_CONVERSATIONS",
+            payload: result.conversations,
+          });
+          if (result.activeConversationId) {
+            dispatch({
+              type: "SET_ACTIVE_CONVERSATION",
+              payload: result.activeConversationId,
+            });
+          }
+        }
+      } catch (e) {
+        console.error("[ChatContext] Failed to load from storage:", e);
+      }
+    };
+
+    init();
+  }, []);
+
+  // Persist to storage
+  useEffect(() => {
+    if (!initialized.current) return;
+
+    const save = async () => {
+      try {
+        await chrome.storage.local.set({
+          conversations: state.conversations,
+          activeConversationId: state.activeConversationId,
+        });
+      } catch (e) {
+        console.error("[ChatContext] Failed to save to storage:", e);
+      }
+    };
+
+    // Debounce save
+    const timer = setTimeout(save, 500);
+    return () => clearTimeout(timer);
+  }, [state.conversations, state.activeConversationId]);
+
+  // ============ Conversation Methods ============
+
+  const abortCurrentIfResponding = useCallback(() => {
+    const assistantId = currentAssistantId.current;
+    if (!assistantId) return;
+    responseGeneration.current += 1;
+    chrome.runtime.sendMessage({ action: "abortChat" }).catch(() => {});
+    currentAssistantId.current = null;
+    dispatch({
+      type: "FINISH_RESPONSE",
+      payload: { content: "*(已停止生成)*", messageId: assistantId },
+    });
+  }, []);
+
+  const createNewConversation = useCallback(
+    (newMode: AppMode = "chat"): string => {
+      abortCurrentIfResponding();
+
+      const active = state.conversations.find(
+        (c) => c.id === state.activeConversationId,
+      );
+      if (active && active.messages.length === 0 && active.mode === newMode) {
+        return active.id;
+      }
+
+      const conv = createConversation(newMode);
+      dispatch({ type: "ADD_CONVERSATION", payload: conv });
+      return conv.id;
+    },
+    [state.conversations, state.activeConversationId, abortCurrentIfResponding],
+  );
+
+  const switchConversation = useCallback(
+    (id: string) => {
+      abortCurrentIfResponding();
+      dispatch({ type: "SET_ACTIVE_CONVERSATION", payload: id });
+    },
+    [abortCurrentIfResponding],
+  );
+
+  const deleteConversation = useCallback((id: string) => {
+    dispatch({ type: "DELETE_CONVERSATION", payload: id });
+  }, []);
+
+  // ============ Message Methods ============
+
+  const addMessage = useCallback(
+    (message: Omit<Message, "id" | "timestamp">): string => {
+      const id = `msg-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+      const fullMessage: Message = {
+        ...message,
+        id,
+        timestamp: Date.now(),
+      };
+      dispatch({ type: "ADD_MESSAGE", payload: fullMessage });
+      return id;
+    },
+    [],
+  );
+
+  const updateMessage = useCallback((id: string, content: string) => {
+    dispatch({ type: "UPDATE_MESSAGE", payload: { id, content } });
+  }, []);
+
+  const clearMessages = useCallback(() => {
+    dispatch({ type: "CLEAR_MESSAGES" });
+  }, []);
+
+  const deleteMessage = useCallback((id: string) => {
+    dispatch({ type: "DELETE_MESSAGE", payload: id });
+  }, []);
+
+  const deleteMessagePair = useCallback((assistantMessageId: string) => {
+    const conv = getActiveConversation(state);
+    if (!conv) return;
+
+    // 找到 AI 消息的索引
+    const assistantIndex = conv.messages.findIndex((m) => m.id === assistantMessageId);
+    if (assistantIndex === -1) return;
+
+    // 验证是 AI 消息
+    if (conv.messages[assistantIndex].role !== "assistant") {
+      // 如果不是 AI 消息，只删除该消息
+      dispatch({ type: "DELETE_MESSAGE", payload: assistantMessageId });
+      return;
+    }
+
+    // 找到对应的用户消息（AI 消息前最近的一条用户消息）
+    let userMessageIndex = -1;
+    for (let i = assistantIndex - 1; i >= 0; i--) {
+      if (conv.messages[i].role === "user") {
+        userMessageIndex = i;
+        break;
+      }
+    }
+
+    if (userMessageIndex === -1) {
+      // 没有找到用户消息，只删除 AI 消息
+      dispatch({ type: "DELETE_MESSAGE", payload: assistantMessageId });
+      return;
+    }
+
+    // 删除从用户消息到 AI 消息的所有消息
+    dispatch({
+      type: "DELETE_MESSAGES_RANGE",
+      payload: { startIndex: userMessageIndex, endIndex: assistantIndex },
+    });
+  }, [state]);
+
+  const regenerateMessage = useCallback(
+    (messageId: string) => {
+      const conv = getActiveConversation(state);
+      if (!conv) return;
+
+      // 找到当前消息的索引
+      const messageIndex = conv.messages.findIndex((m) => m.id === messageId);
+      if (messageIndex === -1) return;
+
+      // 找到上一条用户消息
+      let userMessageIndex = -1;
+      for (let i = messageIndex - 1; i >= 0; i--) {
+        if (conv.messages[i].role === "user") {
+          userMessageIndex = i;
+          break;
+        }
+      }
+
+      if (userMessageIndex === -1) return;
+
+      const userMessage = conv.messages[userMessageIndex];
+
+      // 删除从用户消息到当前消息的所有消息
+      dispatch({
+        type: "DELETE_MESSAGES_RANGE",
+        payload: { startIndex: userMessageIndex, endIndex: messageIndex },
+      });
+
+      // 重新发送用户消息
+      // 使用 setTimeout 确保删除操作完成后再发送
+      setTimeout(() => {
+        // 触发消息发送逻辑，传递完整的用户消息信息
+        window.dispatchEvent(
+          new CustomEvent("regenerateMessage", {
+            detail: {
+              content: userMessage.content,
+              images: userMessage.images,
+              resource_infos: userMessage.resource_infos,
+            },
+          }),
+        );
+      }, 0);
+    },
+    [state],
+  );
+
+  // ============ UI Methods ============
+
+  const setView = useCallback((view: ViewState) => {
+    dispatch({ type: "SET_VIEW", payload: view });
+  }, []);
+
+  const setMode = useCallback((newMode: AppMode) => {
+    dispatch({ type: "SET_MODE", payload: newMode });
+  }, []);
+
+  const setTheme = useCallback((theme: Theme) => {
+    setDocTheme(theme);
+    dispatch({ type: "SET_THEME", payload: theme });
+  }, []);
+
+  // ============ Chat Methods ============
+
+  const setEngine = useCallback((engine: SearchEngine) => {
+    dispatch({ type: "SET_ENGINE", payload: engine });
+  }, []);
+
+  const startResponse = useCallback((): string => {
+    responseGeneration.current += 1;
+    const id = addMessage({
+      role: "assistant",
+      content: "",
+      isStreaming: true,
+    });
+    currentAssistantId.current = id;
+    dispatch({ type: "SET_STATUS", payload: "responding" });
+    return id;
+  }, [addMessage]);
+
+  const finishResponse = useCallback(
+    (content: string, githubItems?: GitHubRepoItem[]) => {
+      const messageId = currentAssistantId.current ?? undefined;
+      dispatch({
+        type: "FINISH_RESPONSE",
+        payload:
+          githubItems != null
+            ? { content, githubItems, messageId }
+            : { content, messageId },
+      });
+      currentAssistantId.current = null;
+    },
+    [],
+  );
+
+  const stopResponse = useCallback(() => {
+    responseGeneration.current += 1;
+
+    chrome.runtime.sendMessage({ action: "abortChat" }).catch(() => {});
+
+    const assistantId = currentAssistantId.current;
+    currentAssistantId.current = null;
+
+    if (assistantId) {
+      const conv = state.conversations.find(
+        (c) => c.id === state.activeConversationId,
+      );
+      const streamingMsg = conv?.messages.find(
+        (m) => m.id === assistantId && m.isStreaming,
+      );
+      const currentContent = streamingMsg?.content || "";
+      const stoppedContent = currentContent
+        ? currentContent + "\n\n*(已停止生成)*"
+        : "*(已停止生成)*";
+      dispatch({
+        type: "FINISH_RESPONSE",
+        payload: { content: stoppedContent, messageId: assistantId },
+      });
+    } else {
+      dispatch({ type: "SET_STATUS", payload: "idle" });
+      dispatch({ type: "SET_SEARCH_STATUS", payload: null });
+    }
+  }, [state.conversations, state.activeConversationId]);
+
+  const setSearchResults = useCallback(
+    (messageId: string, _results: SearchResult[]) => {
+      // Update message with search results
+      const msg = messages.find((m) => m.id === messageId);
+      if (msg) {
+        dispatch({
+          type: "UPDATE_MESSAGE",
+          payload: { id: messageId, content: msg.content },
+        });
+      }
+    },
+    [messages],
+  );
+
+  // ============ Agent Methods ============
+
+  const extractActionSpace =
+    useCallback(async (): Promise<ActionSpace | null> => {
+      try {
+        const response = await sendToBackground<{
+          success: boolean;
+          actionSpace?: ActionSpace;
+          error?: string;
+        }>({ action: "extractActionSpace" });
+
+        if (response.success && response.actionSpace) {
+          dispatch({ type: "SET_ACTION_SPACE", payload: response.actionSpace });
+          dispatch({ type: "SET_AGENT_MODE", payload: true });
+          return response.actionSpace;
+        } else {
+          console.error(
+            "[ChatContext] Failed to extract Action Space:",
+            response.error,
+          );
+          return null;
+        }
+      } catch (e) {
+        console.error("[ChatContext] Failed to extract Action Space:", e);
+        return null;
+      }
+    }, []);
+
+  const createActionPlan = useCallback((actions: Action[]) => {
+    const planItems: ActionPlanItem[] = actions.map((action) => ({
+      action,
+      status: "pending" as ActionStatus,
+    }));
+    dispatch({ type: "SET_ACTION_PLAN", payload: planItems });
+  }, []);
+
+  const executeAction = useCallback(
+    async (
+      actionId: string,
+      params?: ActionParams,
+    ): Promise<ActionResult | null> => {
+      try {
+        dispatch({ type: "SET_EXECUTING", payload: true });
+        dispatch({
+          type: "UPDATE_ACTION_STATUS",
+          payload: { actionId, status: "executing" },
+        });
+
+        const response = await sendToBackground<{
+          success: boolean;
+          result?: ActionResult;
+          error?: string;
+        }>({
+          action: "executeAction",
+          actionId,
+          params,
+        });
+
+        if (response.success && response.result) {
+          dispatch({
+            type: "UPDATE_ACTION_STATUS",
+            payload: {
+              actionId,
+              status: response.result.success ? "success" : "failed",
+              result: response.result,
+            },
+          });
+          dispatch({ type: "ADD_EXECUTION_RESULT", payload: response.result });
+          return response.result;
+        } else {
+          dispatch({
+            type: "UPDATE_ACTION_STATUS",
+            payload: {
+              actionId,
+              status: "failed",
+              result: {
+                success: false,
+                actionId,
+                error: response.error || "Unknown error",
+                domChanged: false,
+                urlChanged: false,
+                duration: 0,
+              },
+            },
+          });
+          return null;
+        }
+      } catch (e) {
+        console.error("[ChatContext] Failed to execute Action:", e);
+        return null;
+      } finally {
+        dispatch({ type: "SET_EXECUTING", payload: false });
+      }
+    },
+    [],
+  );
+
+  const confirmAction = useCallback(
+    async (actionId: string) => {
+      const result = await executeAction(actionId);
+      if (result) {
+        dispatch({
+          type: "SET_CURRENT_ACTION_INDEX",
+          payload: agent.currentActionIndex + 1,
+        });
+      }
+    },
+    [executeAction, agent.currentActionIndex],
+  );
+
+  const skipAction = useCallback(
+    (actionId: string) => {
+      dispatch({
+        type: "UPDATE_ACTION_STATUS",
+        payload: { actionId, status: "skipped" },
+      });
+      dispatch({
+        type: "SET_CURRENT_ACTION_INDEX",
+        payload: agent.currentActionIndex + 1,
+      });
+    },
+    [agent.currentActionIndex],
+  );
+
+  const cancelPlan = useCallback(() => {
+    dispatch({ type: "RESET_AGENT" });
+    sendToBackground({ action: "clearHighlights" }).catch(() => {});
+  }, []);
+
+  const highlightAction = useCallback(
+    async (actionId: string, highlight: boolean) => {
+      try {
+        await sendToBackground({
+          action: "highlightAction",
+          actionId,
+          highlight,
+          status: "pending",
+        });
+      } catch (e) {
+        console.error("[ChatContext] Failed to highlight:", e);
+      }
+    },
+    [],
+  );
+
+  const resetAgent = useCallback(() => {
+    dispatch({ type: "RESET_AGENT" });
+  }, []);
+
+  // ============ Context Reference Methods ============
+
+  const addContextRef = useCallback((ref: AnyContextRef) => {
+    dispatch({ type: "ADD_CONTEXT_REF", payload: ref });
+  }, []);
+
+  const removeContextRef = useCallback((id: string) => {
+    dispatch({ type: "REMOVE_CONTEXT_REF", payload: id });
+  }, []);
+
+  const clearContextRefs = useCallback(() => {
+    dispatch({ type: "CLEAR_CONTEXT_REFS" });
+  }, []);
+
+  const resolveContextRef = useCallback(
+    async (ref: AnyContextRef): Promise<string> => {
+      // 检查是否已解析
+      if (attachedContext.resolvedContent[ref.id]) {
+        return attachedContext.resolvedContent[ref.id];
+      }
+
+      // 标记为正在解析
+      dispatch({
+        type: "SET_CONTEXT_RESOLVING",
+        payload: { id: ref.id, resolving: true },
+      });
+
+      try {
+        const response = await sendToBackground<{
+          success: boolean;
+          data?: string;
+          error?: string;
+        }>({
+          action: "resolveContext",
+          ref,
+        });
+
+        if (response.success && response.data) {
+          dispatch({
+            type: "SET_RESOLVED_CONTENT",
+            payload: { id: ref.id, content: response.data },
+          });
+          return response.data;
+        } else {
+          dispatch({
+            type: "SET_CONTEXT_RESOLVING",
+            payload: { id: ref.id, resolving: false },
+          });
+          return "";
+        }
+      } catch (e) {
+        console.error("[ChatContext] Failed to resolve context:", e);
+        dispatch({
+          type: "SET_CONTEXT_RESOLVING",
+          payload: { id: ref.id, resolving: false },
+        });
+        return "";
+      }
+    },
+    [attachedContext.resolvedContent],
+  );
+
+  const fetchTabs = useCallback(async (query?: string): Promise<TabRef[]> => {
+    try {
+      const response = await sendToBackground<{
+        success: boolean;
+        data?: TabRef[];
+        error?: string;
+      }>({
+        action: "getTabs",
+        query,
+      });
+      return response.success ? response.data || [] : [];
+    } catch (e) {
+      console.error("[ChatContext] Failed to fetch tabs:", e);
+      return [];
+    }
+  }, []);
+
+  const fetchBookmarks = useCallback(
+    async (query?: string): Promise<BookmarkRef[]> => {
+      try {
+        const response = await sendToBackground<{
+          success: boolean;
+          data?: BookmarkRef[];
+          error?: string;
+        }>({
+          action: "getBookmarks",
+          query,
+        });
+        return response.success ? response.data || [] : [];
+      } catch (e) {
+        console.error("[ChatContext] Failed to fetch bookmarks:", e);
+        return [];
+      }
+    },
+    [],
+  );
+
+  const fetchHistory = useCallback(
+    async (query?: string, maxResults?: number): Promise<HistoryRef[]> => {
+      try {
+        const response = await sendToBackground<{
+          success: boolean;
+          data?: HistoryRef[];
+          error?: string;
+        }>({
+          action: "getHistory",
+          query,
+          maxResults,
+        });
+        return response.success ? response.data || [] : [];
+      } catch (e) {
+        console.error("[ChatContext] Failed to fetch history:", e);
+        return [];
+      }
+    },
+    [],
+  );
+
+  const fetchCurrentPage = useCallback(async (): Promise<PageRef | null> => {
+    try {
+      const response = await sendToBackground<{
+        success: boolean;
+        data?: PageRef;
+        error?: string;
+      }>({
+        action: "getCurrentPage",
+      });
+      return response.success ? response.data || null : null;
+    } catch (e) {
+      console.error("[ChatContext] Failed to fetch current page:", e);
+      return null;
+    }
+  }, []);
+
+  // ============ MCP Tool Call Listener（需 sendResponse，单独注册） ============
+
+  useEffect(() => {
+    const listener = (
+      message: { action?: string; name?: string; args?: Record<string, unknown> },
+      _sender: chrome.runtime.MessageSender,
+      sendResponse: (response: unknown) => void
+    ) => {
+      if (message.action !== "mcpCallTool") return false;
+      (async () => {
+        try {
+          if (FORBIDDEN_TOOL_PATTERNS.test(message.name || "")) {
+            sendResponse({ success: false, error: "Madoka 不支持删除类操作" });
+            return;
+          }
+          const toolToServer = getMCPToolToServerForSession();
+          if (!toolToServer) {
+            sendResponse({ success: false, error: "No MCP session" });
+            return;
+          }
+          const serverId = toolToServer.get(message.name || "");
+          if (!serverId) {
+            sendResponse({ success: false, error: `Tool ${message.name} not found` });
+            return;
+          }
+          const result = await callMCPToolOnServer(
+            serverId,
+            message.name || "",
+            message.args || {}
+          );
+          sendResponse({ success: true, result });
+        } catch (e) {
+          sendResponse({ success: false, error: (e as Error).message });
+        }
+      })();
+      return true; // 保持通道以支持异步 sendResponse
+    };
+    chrome.runtime.onMessage.addListener(listener);
+    return () => chrome.runtime.onMessage.removeListener(listener);
+  }, []);
+
+  // ============ Background Message Listener ============
+
+  useEffect(() => {
+    const unsubscribe = onBackgroundMessage((message: BackgroundMessage) => {
+      switch (message.action) {
+        case "streamChunk":
+          if (!currentAssistantId.current) break;
+          updateMessage(currentAssistantId.current, message.content);
+          break;
+
+        case "streamEnd":
+          if (!currentAssistantId.current) break;
+          finishResponse(message.content);
+          break;
+
+        case "searchResults":
+          if (!currentAssistantId.current) break;
+          dispatch({
+            type: "SET_SEARCH_STATUS",
+            payload: `📖 Reading ${message.results.length} results...`,
+          });
+          break;
+
+        case "status":
+          if (!currentAssistantId.current) break;
+          dispatch({ type: "SET_SEARCH_STATUS", payload: message.message });
+          break;
+
+        case "error":
+          if (!currentAssistantId.current) break;
+          dispatch({ type: "SET_STATUS", payload: "idle" });
+          addMessage({
+            role: "system",
+            content: `❌ ${message.message}`,
+          });
+          break;
+
+        case "showLinkSummaryInSidepanel": {
+          const linkUrl = message.linkUrl;
+          if (!linkUrl) break;
+
+          dispatch({
+            type: "SET_LINK_SUMMARY",
+            payload: {
+              url: linkUrl,
+              summary: "",
+              points: [],
+              loading: true,
+              error: null,
+            },
+          });
+          (async () => {
+            try {
+              const fetchRes = await sendToBackground<{
+                success: boolean;
+                data?: {
+                  title: string;
+                  url: string;
+                  content: string;
+                  length: number;
+                };
+                error?: string;
+              }>({
+                action: "fetchLinkContent",
+                url: linkUrl,
+              });
+              if (!fetchRes.success || !fetchRes.data?.content) {
+                throw new Error(fetchRes.error || "无法获取页面内容");
+              }
+
+              const summaryRes = await sendToBackground<{
+                success: boolean;
+                result?: { summary: string; points: LinkSummaryPoint[] };
+                error?: string;
+              }>({
+                action: "summarizeContentWithPoints",
+                title: fetchRes.data.title,
+                url: fetchRes.data.url,
+                content: fetchRes.data.content,
+              });
+              if (!summaryRes.success || !summaryRes.result) {
+                throw new Error(summaryRes.error || "生成总结失败");
+              }
+
+              dispatch({
+                type: "SET_LINK_SUMMARY",
+                payload: {
+                  url: linkUrl,
+                  summary: summaryRes.result.summary,
+                  points: summaryRes.result.points || [],
+                  loading: false,
+                  error: null,
+                },
+              });
+            } catch (e) {
+              dispatch({
+                type: "SET_LINK_SUMMARY",
+                payload: {
+                  url: linkUrl,
+                  summary: "",
+                  points: [],
+                  loading: false,
+                  error: (e as Error).message,
+                },
+              });
+            }
+          })();
+          break;
+        }
+      }
+    });
+
+    return unsubscribe;
+  }, [addMessage, updateMessage, finishResponse]);
+
+  // ============ Context Value ============
+
+  const value: ChatContextType = {
+    state,
+    dispatch,
+    activeConversation,
+    messages,
+    mode,
+    agent,
+    pageContent,
+    attachedContext,
+    createNewConversation,
+    switchConversation,
+    deleteConversation,
+    addMessage,
+    updateMessage,
+    clearMessages,
+    deleteMessage,
+    deleteMessagePair,
+    regenerateMessage,
+    setView,
+    setMode,
+    setTheme,
+    setEngine,
+    startResponse,
+    finishResponse,
+    stopResponse,
+    setSearchResults,
+    extractActionSpace,
+    createActionPlan,
+    executeAction,
+    confirmAction,
+    skipAction,
+    cancelPlan,
+    highlightAction,
+    resetAgent,
+    addContextRef,
+    removeContextRef,
+    clearContextRefs,
+    resolveContextRef,
+    fetchTabs,
+    fetchBookmarks,
+    fetchHistory,
+    fetchCurrentPage,
+  };
+
+  return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
+}
+
+// ============ Hook ============
+
+export function useChatContext(): ChatContextType {
+  const context = useContext(ChatContext);
+  if (!context) {
+    throw new Error("useChatContext must be used within a ChatProvider");
+  }
+  return context;
+}

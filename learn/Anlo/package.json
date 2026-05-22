@@ -1,0 +1,37 @@
+{
+  "name": "anlo-page-structure-tool",
+  "version": "2.2.0",
+  "description": "Anlo 页面结构化工具 - 智能元素提取和定位工具 (TypeScript + React + Webpack)",
+  "private": true,
+  "scripts": {
+    "dev": "webpack --mode development --watch",
+    "build": "webpack --mode production",
+    "build:dev": "webpack --mode development",
+    "watch": "webpack --mode development --watch --stats minimal",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@mui/material": "^5.14.0",
+    "@mui/icons-material": "^5.14.0",
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
+    "@types/chrome": "^0.0.253",
+    "typescript": "^5.3.3",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.0",
+    "ts-loader": "^9.5.1",
+    "html-webpack-plugin": "^5.6.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "style-loader": "^3.3.3",
+    "css-loader": "^6.8.1",
+    "rimraf": "^5.0.5"
+  }
+}
+

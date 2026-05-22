@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "Levitate Boat - 记忆 Agent",
+  "version": "1.0.0",
+  "description": "基于本地记忆与 LLM 的个人助手，支持 Ollama 本地 API",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "sidePanel"
+  ],
+  "host_permissions": [
+    "<all_urls>",
+    "http://localhost:11434/*"
+  ],
+  "background": {
+    "service_worker": "src/background/index.ts",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/content/index.ts"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/16.png",
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icons/16.png",
+      "32": "icons/32.png"
+    },
+    "default_title": "打开 Levitate Boat 侧边栏"
+  },
+  "side_panel": {
+    "default_path": "src/popup/index.html"
+  },
+  "options_page": "src/options/index.html"
+}
