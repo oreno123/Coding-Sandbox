@@ -32,6 +32,7 @@ Coding-Sandbox/
 | [前后端](./my-projects/%E5%89%8D%E5%90%8E%E7%AB%AF/) | |
 | [LevitateBoat](./my-projects/LevitateBoat/) | 浏览器扩展 - 本地记忆+LLM 对话，保护隐私的长期记忆助手 |
 | [Madoka](./my-projects/Madoka/) | Chrome 侧边栏扩展 - 智能搜索助手，支持通义千问对话与 Obsidian 同步 |
+| [assignment-writer](./my-projects/assignment-writer/) | AI 作业生成工具 - 专为软件工程学科设计的结构化写作助手 |
 
 ## Commit 规范
 
