@@ -19,6 +19,7 @@ Coding-Sandbox/
 | [MemMachine](./learn/MemMachine/) | 开源 AI Agent 长期记忆层 - 5行代码让 AI 拥有持久记忆 |
 | [A11y](./learn/A11y/) | Chrome 扩展 - 无障碍 DOM 序列化与浏览器自动化 |
 | [letta](./learn/letta/) | Letta - LLM Agent 长期记忆与自定义工具框架 |
+| [memU](./learn/memU/) | 24/7 主动式 AI 记忆框架，支持多模态长期记忆与意图预测 |
 
 ## 🚀 我的项目
 
