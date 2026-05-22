@@ -1,3 +1,7 @@
+# memU — Learning Project
+
+> 这是一个学习项目（learn），fork 自 [NevaMind-AI/memU](https://github.com/NevaMind-AI/memU)，用于学习 AI 记忆框架的设计与实现。
+
 ![MemU Banner](assets/banner.png)
 
 <div align="center">
