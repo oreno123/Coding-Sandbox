@@ -1,0 +1,27 @@
+{
+    "language": "zh-CN",
+    "save_dir": "./data",
+    "theme": "light",
+    "export_format": "png",
+    "window": {
+        "width": 2906,
+        "height": 1730,
+        "x": -13,
+        "y": -13,
+        "fullscreen": false,
+        "on_top": true
+    },
+    "tinify": {
+        "tinify_key": "",
+        "preserve": [],
+        "compression_count": 0
+    },
+    "edge_optimization": {
+        "r": 90,
+        "is_edge_optimization": true
+    },
+    "api_server": {
+        "is_enable": false,
+        "port": 11111
+    }
+}

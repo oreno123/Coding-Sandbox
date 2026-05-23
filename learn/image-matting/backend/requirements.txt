@@ -1,0 +1,28 @@
+# 核心Web框架
+fastapi==0.104.1
+uvicorn==0.24.0
+python-multipart==0.0.6
+
+# 基础数据处理
+numpy==1.26.4
+Pillow==10.4.0
+
+# AI相关（仅保留非PyTorch依赖）
+transformers==4.44.2
+onnxruntime==1.16.3
+
+# 辅助工具
+requests==2.32.3
+python-dotenv==1.0.1
+loguru==0.7.2
+
+# 类型注解
+pydantic==2.6.1
+pydantic-core==2.14.0
+typing-extensions==4.12.2
+
+# 网络/编码
+urllib3==2.2.2
+charset-normalizer==3.3.2
+idna==3.8
+certifi==2024.8.30
