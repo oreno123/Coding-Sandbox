@@ -21,6 +21,7 @@ Coding-Sandbox/
 | [letta](./learn/letta/) | Letta - LLM Agent 长期记忆与自定义工具框架 |
 | [memU](./learn/memU/) | 24/7 主动式 AI 记忆框架，支持多模态长期记忆与意图预测 |
 | [yuque-export](./learn/yuque-export/) | Chrome 扩展 - 语雀增强导出，一键导出文档到 Obsidian（视频下载+替换） |
+| [image-matting](./learn/image-matting/) | AI 抠图工具 - 基于 briaai/RMBG-1.4 本地模型，支持批量抠图、AI 修补、证件照、格式转换与压缩（Python+Vue） |
 
 ## 🚀 我的项目
 
