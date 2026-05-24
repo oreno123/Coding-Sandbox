@@ -1,0 +1,72 @@
+scratch/
+
+# Python 缺省的编译文件
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# 虚拟环境
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# 包和依赖
+*.egg
+*.egg-info/
+dist/
+build/
+sdist/
+*.tar.gz
+*.whl
+
+# 临时文件
+*.log
+*.bak
+*.swp
+*.swo
+*~
+
+# IDE 配置文件
+.vscode/
+.idea/
+*.iml
+
+# 操作系统生成的文件
+.DS_Store
+Thumbs.db
+
+# 配置文件
+*.env         # .env 文件（环境变量配置文件）
+*.env.local   # 其他的本地环境配置文件
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# 测试相关文件
+*.coverage
+.coverage.*
+nosetests.xml
+test-results/
+*.tox/
+
+# Flask 相关
+instance/
+*.sqlite
+*.db
+
+# 环境文件
+*.env
+
+# 配置文件
+*.ini
+*.yml
+*.json
+
+.pytest_cache/
+.coverage
+htmlcov/
+private/
