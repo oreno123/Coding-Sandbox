@@ -1,0 +1,100 @@
+{
+  "name": "electron-viet",
+  "version": "1.0.0",
+  "main": "./out/main/index.js",
+  "author": "TraeAI",
+  "description": "Screen Recorder with Input Monitoring",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "gen:thumbs": "node scripts/generate-background-thumbnails.mjs",
+    "release": "node scripts/release.mjs",
+    "typecheck": "tsc --noEmit",
+    "dist": "npm run build && cross-env ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ ELECTRON_BUILDER_BINARIES_MIRROR=https://npmmirror.com/mirrors/electron-builder-binaries/ electron-builder --win",
+    "dist:dir": "npm run build && cross-env ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ ELECTRON_BUILDER_BINARIES_MIRROR=https://npmmirror.com/mirrors/electron-builder-binaries/ electron-builder --dir"
+  },
+  "dependencies": {
+    "@electron-toolkit/preload": "^3.0.0",
+    "@electron-toolkit/utils": "^3.0.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.9",
+    "@mui/material": "^7.3.9",
+    "clsx": "^2.1.0",
+    "electron-store": "^11.0.2",
+    "electron-updater": "^6.8.3",
+    "ffmpeg-static": "^5.3.0",
+    "framer-motion": "^12.36.0",
+    "lucide-react": "^0.577.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^7.13.1",
+    "tailwind-merge": "^2.2.1",
+    "uiohook-napi": "^1.5.4",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/uuid": "^9.0.8",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.27",
+    "cross-env": "^10.1.0",
+    "electron": "^28.2.0",
+    "electron-builder": "^26.8.1",
+    "electron-vite": "^2.0.0",
+    "postcss": "^8.5.8",
+    "sharp": "^0.33.5",
+    "tailwindcss": "^4.2.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.0"
+  },
+  "build": {
+    "appId": "com.electron-viet.app",
+    "productName": "Screen Recorder",
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "http://page.keyu.live/keyusee/upload/"
+      }
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "out/**/*",
+      "package.json",
+      "icon/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "icon/keyusee.ico",
+        "to": "icon/keyusee.ico"
+      }
+    ],
+    "win": {
+      "icon": "icon/keyusee.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Screen Recorder",
+      "installerIcon": "icon/keyusee.ico",
+      "uninstallerIcon": "icon/keyusee.ico",
+      "include": "scripts/installer.nsh"
+    }
+  }
+}

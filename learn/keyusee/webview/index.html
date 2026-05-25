@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>可遇录屏 keyusee - Focusee 平替 - 完全免费的画中画录屏与剪辑工具</title>
+  <meta name="description" content="可遇录屏（keyusee）是完全免费的录屏与剪辑工具，将录屏、剪辑、AI 着重、画中画和 3D 变换整合为一体，帮助团队更快输出清晰视频。" />
+  <link rel="icon" type="image/png" href="./image/icon.png" />
+  <link rel="stylesheet" href="./styles/tokens.css" />
+  <link rel="stylesheet" href="./styles/base.css" />
+  <link rel="stylesheet" href="./styles/components.css" />
+  <link rel="stylesheet" href="./styles/animations.css" />
+</head>
+
+<body class="is-loading">
+  <div id="siteLoader" class="site-loader" role="status" aria-live="polite">
+    <div class="site-loader__panel">
+      <img src="./image/icon.png" alt="" class="site-loader__icon" />
+      <p>可遇录屏 keyusee 正在加载...</p>
+    </div>
+  </div>
+
+  <div class="bg-orb bg-orb--a" aria-hidden="true"></div>
+  <div class="bg-orb bg-orb--b" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <header class="site-header glass">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="可遇录屏 keyusee 首页">
+        <span class="brand-mark">
+          <img src="./image/icon.png" alt="" />
+        </span>
+        <span class="brand-text">可遇录屏 keyusee</span>
+      </a>
+      <nav class="nav">
+        <a href="#pain">痛点</a>
+        <a href="#features">功能</a>
+        <a href="#showcase">软件展示</a>
+        <a href="#contact">联系</a>
+      </nav>
+      <div class="header-actions">
+        <button id="themeToggle" class="theme-toggle" type="button" aria-label="切换主题">
+          <span class="theme-toggle__knob"></span>
+          <span id="themeLabel">暗色</span>
+        </button>
+        <a class="btn btn-primary" href="#" data-download-link aria-label="下载 可遇录屏 keyusee">免费下载</a>
+        <a class="btn btn-ghost btn-oss oss-link" href="https://gitcode.com/oNuoZuo/keyusee" target="_blank"
+          rel="noopener noreferrer" aria-label="打开 可遇录屏 keyusee 开源地址">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path
+              d="M12 .5A12 12 0 0 0 8.2 23.9c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.6-1.4-1.4-1.8-1.4-1.8-1.2-.8.1-.8.1-.8 1.3.1 2 .8 2 1.2 1.2 2 3.1 1.4 3.9 1 .1-.8.5-1.4.9-1.7-2.7-.3-5.5-1.3-5.5-6A4.7 4.7 0 0 1 6 8.3c-.1-.3-.5-1.6.1-3.2 0 0 1-.3 3.2 1.2a11.2 11.2 0 0 1 5.8 0C17.3 4.8 18.3 5 18.3 5c.7 1.6.3 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.3c0 4.7-2.8 5.7-5.5 6 .5.4.9 1.1.9 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5Z" />
+          </svg>
+          开源地址
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero container">
+      <div class="hero-copy reveal">
+        <p class="eyebrow">完全免费 · Focusee 平替 · Electron 桌面应用</p>
+        <h1>免费，现代化录屏工具</h1>
+        <p class="hero-sub">
+          Focusee 平替，可遇录屏（keyusee）面向教程录制、产品演示、Bug 复现和远程协作场景，提供录制、剪辑、AI 着重、画中画讲解、3D
+          变换与导出的一体化流程。当前核心功能长期免费开放，无订阅、无导出水印。
+        </p>
+        <p class="project-mark">本项目已开源，欢迎查看源码与参与共建。</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-large" href="#" data-download-link>免费下载 Windows 版本</a>
+          <a class="btn btn-ghost btn-large oss-link" href="https://gitcode.com/oNuoZuo/keyusee" target="_blank"
+            rel="noopener noreferrer" aria-label="打开 可遇录屏 keyusee 开源项目">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                d="M12 .5A12 12 0 0 0 8.2 23.9c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.6-1.4-1.4-1.8-1.4-1.8-1.2-.8.1-.8.1-.8 1.3.1 2 .8 2 1.2 1.2 2 3.1 1.4 3.9 1 .1-.8.5-1.4.9-1.7-2.7-.3-5.5-1.3-5.5-6A4.7 4.7 0 0 1 6 8.3c-.1-.3-.5-1.6.1-3.2 0 0 1-.3 3.2 1.2a11.2 11.2 0 0 1 5.8 0C17.3 4.8 18.3 5 18.3 5c.7 1.6.3 2.9.1 3.2a4.7 4.7 0 0 1 1.3 3.3c0 4.7-2.8 5.7-5.5 6 .5.4.9 1.1.9 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5Z" />
+            </svg>
+            开源项目
+          </a>
+          <a class="btn btn-ghost btn-large" href="#features">查看全部功能</a>
+        </div>
+        <div class="metrics">
+          <article class="metric tilt">
+            <div class="metric-value">0 元</div>
+            <p>核心功能使用成本</p>
+          </article>
+          <article class="metric tilt">
+            <div class="metric-value"><span data-counter="6">0</span>+</div>
+            <p>核心模块</p>
+          </article>
+          <article class="metric tilt">
+            <div class="metric-value"><span data-counter="4">0</span> 大</div>
+            <p>典型使用场景</p>
+          </article>
+        </div>
+        <div class="free-claim reveal">
+          可遇录屏（keyusee）当前版本坚持 <strong>完全免费</strong>：无订阅、无按时长收费、无导出水印。
+        </div>
+      </div>
+      <div class="hero-visual reveal">
+        <article class="mac-window tilt">
+          <div class="mac-window__chrome">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+            <p>可遇录屏 keyusee · 录制与剪辑一体化</p>
+          </div>
+          <div class="mac-window__body">
+            <div class="panel-line panel-line--lg"></div>
+            <div class="panel-row panel-row--showcase">
+              <button id="heroVideoTrigger" class="panel-card panel-media panel-media--video pulse" type="button"
+                aria-label="放大观看产品演示视频">
+                <video id="heroVideo" src="./image/video.webm" autoplay muted loop playsinline
+                  preload="metadata"></video>
+                <span class="panel-media__hint">点击放大观看</span>
+              </button>
+              <a id="heroShotLink" class="panel-card panel-media panel-media--shots" href="#showcase"
+                aria-label="查看软件展示截图">
+                <img id="heroShotPreview" src="" alt="" loading="lazy" decoding="async" />
+                <span class="panel-media__hint">点击查看软件展示</span>
+              </a>
+            </div>
+            <div class="timeline">
+              <span class="timeline-block"></span>
+              <span class="timeline-block timeline-block--focus"></span>
+              <span class="timeline-block"></span>
+              <span class="timeline-block timeline-block--ai"></span>
+            </div>
+            <div class="panel-row panel-row--bottom">
+              <div class="chip">录制中心</div>
+              <div class="chip">历史详情</div>
+              <div class="chip">AI 着重</div>
+              <div class="chip">3D 变换</div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+
+
+    <section class="section container">
+      <div class="section-head reveal">
+        <p class="eyebrow">推荐工作流</p>
+        <h2>四步完成高可读视频产出</h2>
+      </div>
+      <ol id="workflowList" class="workflow"></ol>
+    </section>
+
+    <section id="features" class="section container">
+      <div class="section-head reveal">
+        <p class="eyebrow">当前版本功能全景</p>
+        <h2>从录制到导出，全链路能力覆盖</h2>
+      </div>
+      <div id="featureGrid" class="feature-grid"></div>
+    </section>
+
+    <section id="showcase" class="section container">
+      <div class="section-head reveal">
+        <p class="eyebrow">软件展示</p>
+        <h2>软件展示</h2>
+        <p>快速了解软件界面和操作逻辑</p>
+      </div>
+      <div class="showcase-masonry reveal">
+        <div id="shotTrack" class="shot-track"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="shotLightbox" class="lightbox" hidden>
+    <div class="lightbox-backdrop" data-lightbox-close="true" aria-hidden="true"></div>
+    <figure class="lightbox-panel" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
+      <button id="lightboxClose" class="lightbox-close" type="button" aria-label="关闭预览">
+        ×
+      </button>
+      <button id="lightboxPrev" class="lightbox-nav lightbox-nav--prev" type="button" aria-label="预览上一张">
+        ←
+      </button>
+      <button id="lightboxNext" class="lightbox-nav lightbox-nav--next" type="button" aria-label="预览下一张">
+        →
+      </button>
+      <img id="lightboxImage" src="" alt="" />
+      <figcaption id="lightboxTitle"></figcaption>
+    </figure>
+  </div>
+
+  <div id="videoLightbox" class="lightbox" hidden>
+    <div class="lightbox-backdrop" data-video-lightbox-close="true" aria-hidden="true"></div>
+    <figure class="lightbox-panel lightbox-panel--video" role="dialog" aria-modal="true">
+      <button id="videoLightboxClose" class="lightbox-close" type="button" aria-label="关闭视频预览">
+        ×
+      </button>
+      <video id="videoLightboxPlayer" src="./image/video.webm" controls playsinline preload="metadata"></video>
+    </figure>
+  </div>
+  <section id="pain" class="section container">
+    <div class="section-head reveal">
+      <p class="eyebrow">市场需求与痛点分析</p>
+      <h2>用户不缺录屏工具，缺的是“讲清楚”的完整流程</h2>
+      <p>
+        在教程创作、产品交付、售前演示与远程协作中，常见痛点是录制和后期割裂、重点不突出、沟通效率低。可遇录屏（keyusee）
+        把关键步骤集中在一个界面里完成。
+      </p>
+    </div>
+    <div id="painGrid" class="pain-grid"></div>
+  </section>
+  <footer id="contact" class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <h3>可遇录屏 keyusee</h3>
+        <p>从“录下来”到“讲明白”，更短路径输出高质量演示视频。</p>
+      </div>
+      <div class="contact-box">
+        <p><strong>微信：</strong>17112129992（同手机号）</p>
+        <p><strong>手机号：</strong>17112129992</p>
+        <p><strong>下载咨询：</strong>可通过微信联系获取最新安装包</p>
+      </div>
+    </div>
+    <p class="copyright">© <span id="currentYear"></span> 可遇录屏 keyusee. All rights reserved.</p>
+  </footer>
+
+  <script type="module" src="./scripts/main.js"></script>
+</body>
+
+</html>

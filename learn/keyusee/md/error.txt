@@ -1,0 +1,57 @@
+HistoryDetail.tsx:110 [HistoryDetailMedia] screen onError Object
+mediaDebugError @ HistoryDetail.tsx:110
+HistoryDetail.tsx:109 [HistoryDetailMedia] screen fallback to file protocol Object
+mediaDebugWarn @ HistoryDetail.tsx:109
+HistoryDetail.tsx:108 [HistoryDetailMedia] screen event Object
+HistoryDetail.tsx:108 [HistoryDetailMedia] camera event Object
+HistoryDetail.tsx:110 [HistoryDetailMedia] camera onError Object
+mediaDebugError @ HistoryDetail.tsx:110
+HistoryDetail.tsx:109 [HistoryDetailMedia] camera fallback to file protocol Object
+mediaDebugWarn @ HistoryDetail.tsx:109
+HistoryDetail.tsx:108 [HistoryDetailMedia] camera event Object
+HistoryDetail.tsx:108 [HistoryDetailMedia] screen event Object
+:5173/#/history-detail?recordId=1773540311976-ao1slu:1 Not allowed to load local resource: file:///C:/Users/Administrator/Downloads/%E5%BD%95%E5%B1%8F%E9%A1%B9%E7%9B%AE/112/%E5%BD%95%E5%B1%8F.webm
+HistoryDetail.tsx:108 [HistoryDetailMedia] camera event Object
+:5173/#/history-detail?recordId=1773540311976-ao1slu:1 Not allowed to load local resource: file:///C:/Users/Administrator/Downloads/%E5%BD%95%E5%B1%8F%E9%A1%B9%E7%9B%AE/112/%E6%91%84%E5%83%8F%E5%A4%B4.webm
+2HistoryDetail.tsx:807 Uncaught RangeError: Invalid time value
+    at Date.toISOString (<anonymous>)
+    at HistoryDetail (HistoryDetail.tsx:807:102)
+    at renderWithHooks (chunk-OOIH53S6.js?v=17bf95e1:11546:26)
+    at updateFunctionComponent (chunk-OOIH53S6.js?v=17bf95e1:14580:28)
+    at beginWork (chunk-OOIH53S6.js?v=17bf95e1:15922:22)
+    at HTMLUnknownElement.callCallback2 (chunk-OOIH53S6.js?v=17bf95e1:3672:22)
+    at Object.invokeGuardedCallbackDev (chunk-OOIH53S6.js?v=17bf95e1:3697:24)
+    at invokeGuardedCallback (chunk-OOIH53S6.js?v=17bf95e1:3731:39)
+    at beginWork$1 (chunk-OOIH53S6.js?v=17bf95e1:19763:15)
+    at performUnitOfWork (chunk-OOIH53S6.js?v=17bf95e1:19196:20)
+chunk-OOIH53S6.js?v=17bf95e1:14030 The above error occurred in the <HistoryDetail> component:
+
+    at HistoryDetail (http://localhost:5173/src/pages/HistoryDetail.tsx:57:20)
+    at RenderedRoute (http://localhost:5173/@fs/C:/Users/Administrator/Downloads/ailuping/electron-viet/node_modules/.vite/deps/react-router-dom.js?v=17bf95e1:6353:26)
+    at Routes (http://localhost:5173/@fs/C:/Users/Administrator/Downloads/ailuping/electron-viet/node_modules/.vite/deps/react-router-dom.js?v=17bf95e1:7220:3)
+    at Router (http://localhost:5173/@fs/C:/Users/Administrator/Downloads/ailuping/electron-viet/node_modules/.vite/deps/react-router-dom.js?v=17bf95e1:7150:13)
+    at HashRouter (http://localhost:5173/@fs/C:/Users/Administrator/Downloads/ailuping/electron-viet/node_modules/.vite/deps/react-router-dom.js?v=17bf95e1:10399:3)
+    at DefaultPropsProvider (http://localhost:5173/@fs/C:/Users/Administrator/Downloads/ailuping/electron-viet/node_modules/.vite/deps/chunk-VAELC7ZM.js?v=17bf95e1:3972:3)
+    at RtlProvider (http://localhost:5173/@fs/C:/Users/Administrator/Downloads/ailuping/electron-viet/node_modules/.vite/deps/chunk-VAELC7ZM.js?v=17bf95e1:3948:3)
+    at ThemeProvider (http://localhost:5173/@fs/C:/Users/Administrator/Downloads/ailuping/electron-viet/node_modules/.vite/deps/chunk-VAELC7ZM.js?v=17bf95e1:3904:5)
+    at ThemeProvider2 (http://localhost:5173/@fs/C:/Users/Administrator/Downloads/ailuping/electron-viet/node_modules/.vite/deps/chunk-VAELC7ZM.js?v=17bf95e1:4124:5)
+    at ThemeProviderNoVars (http://localhost:5173/@fs/C:/Users/Administrator/Downloads/ailuping/electron-viet/node_modules/.vite/deps/chunk-LO5RQU3N.js?v=17bf95e1:275:10)
+    at ThemeProvider (http://localhost:5173/@fs/C:/Users/Administrator/Downloads/ailuping/electron-viet/node_modules/.vite/deps/chunk-LO5RQU3N.js?v=17bf95e1:424:3)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+logCapturedError @ chunk-OOIH53S6.js?v=17bf95e1:14030
+Show 1 more frame
+Show less
+chunk-OOIH53S6.js?v=17bf95e1:19411 Uncaught RangeError: Invalid time value
+    at Date.toISOString (<anonymous>)
+    at HistoryDetail (HistoryDetail.tsx:807:102)
+    at renderWithHooks (chunk-OOIH53S6.js?v=17bf95e1:11546:26)
+    at updateFunctionComponent (chunk-OOIH53S6.js?v=17bf95e1:14580:28)
+    at beginWork (chunk-OOIH53S6.js?v=17bf95e1:15922:22)
+    at beginWork$1 (chunk-OOIH53S6.js?v=17bf95e1:19751:22)
+    at performUnitOfWork (chunk-OOIH53S6.js?v=17bf95e1:19196:20)
+    at workLoopSync (chunk-OOIH53S6.js?v=17bf95e1:19135:13)
+    at renderRootSync (chunk-OOIH53S6.js?v=17bf95e1:19114:15)
+    at recoverFromConcurrentError (chunk-OOIH53S6.js?v=17bf95e1:18734:28)

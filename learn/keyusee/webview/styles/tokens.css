@@ -1,0 +1,40 @@
+:root {
+  color-scheme: light;
+  --font-main: "SF Pro Display", "PingFang SC", "Segoe UI", sans-serif;
+  --font-mono: "SF Mono", "Consolas", monospace;
+
+  --bg: #f4f7ff;
+  --bg-soft: #eaf0ff;
+  --surface: #ffffffcc;
+  --surface-strong: #ffffff;
+  --text: #0f1b3d;
+  --text-soft: #425072;
+  --border: #d8e1fb;
+
+  --primary: #1f6bff;
+  --primary-strong: #0d53d8;
+  --accent: #0bb89f;
+
+  --shadow: 0 20px 40px rgba(19, 42, 95, 0.12);
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+  --header-height: 78px;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #091020;
+  --bg-soft: #0e1a34;
+  --surface: #12203fe0;
+  --surface-strong: #0f1c36;
+  --text: #edf3ff;
+  --text-soft: #a7b5d8;
+  --border: #2b3b62;
+
+  --primary: #66a2ff;
+  --primary-strong: #8cb9ff;
+  --accent: #49d8c3;
+
+  --shadow: 0 28px 56px rgba(3, 8, 20, 0.55);
+}
