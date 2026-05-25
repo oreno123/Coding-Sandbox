@@ -23,6 +23,7 @@ Coding-Sandbox/
 | [yuque-export](./learn/yuque-export/) | Chrome 扩展 - 语雀增强导出，一键导出文档到 Obsidian（视频下载+替换） |
 | [image-matting](./learn/image-matting/) | AI 抠图工具 - 基于 briaai/RMBG-1.4 本地模型，支持批量抠图、AI 修补、证件照、格式转换与压缩（Python+Vue） |
 | [bilibili-rag](./learn/bilibili-rag/) | B站收藏夹 RAG 知识库 - 扫码登录→ASR转写→ChromaDB向量检索→对话问答（FastAPI+LangChain+Next.js） |
+| [keyusee](./learn/keyusee/) | 免费开源录屏神器 - FocuSee 平替，录屏+AI自动着重+编辑+导出（Electron+React） |
 
 ## 🚀 我的项目
 
