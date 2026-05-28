@@ -24,6 +24,8 @@ Coding-Sandbox/
 | [image-matting](./learn/image-matting/) | AI 抠图工具 - 基于 briaai/RMBG-1.4 本地模型，支持批量抠图、AI 修补、证件照、格式转换与压缩（Python+Vue） |
 | [bilibili-rag](./learn/bilibili-rag/) | B站收藏夹 RAG 知识库 - 扫码登录→ASR转写→ChromaDB向量检索→对话问答（FastAPI+LangChain+Next.js） |
 | [keyusee](./learn/keyusee/) | 免费开源录屏神器 - FocuSee 平替，录屏+AI自动着重+编辑+导出（Electron+React） |
+| [ai-hedge-fund-analysis](./learn/ai-hedge-fund-analysis.md) | AI Hedge Fund 源码技术版拆解 - LangGraph编排、技术指标、估值模型、风控机制 |
+| [ai-hedge-fund-小白版](./learn/ai-hedge-fund-小白版.md) | AI Hedge Fund 小白完全指南 - 大白话讲解每个模块的原理和计算 |
 
 ## 🚀 我的项目
 
@@ -37,6 +39,7 @@ Coding-Sandbox/
 | [LevitateBoat](./my-projects/LevitateBoat/) | 浏览器扩展 - 本地记忆+LLM 对话，保护隐私的长期记忆助手 |
 | [Madoka](./my-projects/Madoka/) | Chrome 侧边栏扩展 - 智能搜索助手，支持通义千问对话与 Obsidian 同步 |
 | [assignment-writer](./my-projects/assignment-writer/) | AI 作业生成工具 - 专为软件工程学科设计的结构化写作助手 |
+| [ai-hedge-fund](./my-projects/ai-hedge-fund/) | AI 对冲基金 POC - 18个分析师Agent + LangGraph编排 + 技术面/基本面/估值分析 + 回测引擎 |
 
 ## Commit 规范
 
