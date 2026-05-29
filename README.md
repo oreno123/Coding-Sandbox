@@ -40,6 +40,7 @@ Coding-Sandbox/
 | [Madoka](./my-projects/Madoka/) | Chrome 侧边栏扩展 - 智能搜索助手，支持通义千问对话与 Obsidian 同步 |
 | [assignment-writer](./my-projects/assignment-writer/) | AI 作业生成工具 - 专为软件工程学科设计的结构化写作助手 |
 | [ai-hedge-fund](./my-projects/ai-hedge-fund/) | AI 对冲基金 POC - 18个分析师Agent + LangGraph编排 + 技术面/基本面/估值分析 + 回测引擎 |
+| [fluid-bg](./my-projects/fluid-bg/) | WebGL 流体模拟背景组件 - 一行引入，鼠标拖拽产生流动效果，支持自定义参数 |
 
 ## Commit 规范
 

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fluid BG Demo</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; min-height: 100vh; background: transparent;
+    }
+    body {
+      font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    .page-content {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; min-height: 100vh; gap: 24px;
+    }
+    .card {
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-radius: 16px; padding: 28px 40px; max-width: 520px;
+      text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    }
+    .card h1 { margin: 0 0 6px; font-size: 26px; color: #1a1a2e; }
+    .card p { color: #555; line-height: 1.7; margin: 0 0 12px; }
+    .card code { background: rgba(0,0,0,0.06); padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+    .btn {
+      display: inline-block; padding: 8px 20px;
+      background: #1a1a2e; color: #fff; border: none; border-radius: 8px;
+      cursor: pointer; font-size: 13px; margin: 3px; transition: background 0.2s;
+    }
+    .btn:hover { background: #333; }
+    .btn-outline {
+      background: transparent; color: #1a1a2e; border: 2px solid #1a1a2e;
+    }
+    .btn-outline:hover { background: rgba(26,26,46,0.06); }
+
+    .sliders {
+      display: flex; flex-wrap: wrap; gap: 12px 20px; margin-top: 8px; justify-content: center;
+    }
+    .slider-group {
+      text-align: left; min-width: 160px;
+    }
+    .slider-group label {
+      display: block; font-size: 12px; color: #888; margin-bottom: 2px;
+    }
+    .slider-group input[type=range] { width: 100%; margin: 0; }
+    .slider-group .val { font-size: 12px; color: #333; float: right; }
+  </style>
+</head>
+<body>
+
+  <!-- 1. Tweaked defaults: lower intensity for subtler background effect -->
+  <script>
+    window.FluidBg = {
+      SPLAT_INTENSITY: 0.08,
+      SPLAT_BURST: 2.0,
+      SPLAT_FORCE: 4000,
+      SPLAT_RADIUS: 0.2,
+      DENSITY_DISSIPATION: 0.99,
+      VELOCITY_DISSIPATION: 0.3,
+      CURL: 25,
+      BLOOM_INTENSITY: 0.5,
+      BLOOM_THRESHOLD: 0.7
+    };
+  </script>
+  <script src="fluid-bg.js"></script>
+
+  <!-- 2. Page content -->
+  <div class="page-content">
+    <div class="card">
+      <h1>Fluid BG</h1>
+      <p>
+        用鼠标拖拽页面任意位置，流体在背景流动。<br>
+        只需一行 <code>&lt;script src="fluid-bg.js"&gt;</code>
+      </p>
+      <div class="sliders">
+        <div class="slider-group">
+          <label>颜色强度 <span class="val" id="v_intensity">0.08</span></label>
+          <input type="range" min="0.02" max="0.4" step="0.01" value="0.08" id="s_intensity">
+        </div>
+        <div class="slider-group">
+          <label>拖尾力度 <span class="val" id="v_force">4000</span></label>
+          <input type="range" min="500" max="12000" step="100" value="4000" id="s_force">
+        </div>
+        <div class="slider-group">
+          <label>拖尾粗细 <span class="val" id="v_radius">0.20</span></label>
+          <input type="range" min="0.05" max="1.0" step="0.01" value="0.20" id="s_radius">
+        </div>
+        <div class="slider-group">
+          <label>消散速度 <span class="val" id="v_dissipation">0.99</span></label>
+          <input type="range" min="0.9" max="1.0" step="0.01" value="0.99" id="s_dissipation">
+        </div>
+        <div class="slider-group">
+          <label>涡流强度 <span class="val" id="v_curl">25</span></label>
+          <input type="range" min="0" max="50" step="1" value="25" id="s_curl">
+        </div>
+        <div class="slider-group">
+          <label>Bloom 强度 <span class="val" id="v_bloom">0.50</span></label>
+          <input type="range" min="0.1" max="2.0" step="0.05" value="0.50" id="s_bloom">
+        </div>
+      </div>
+      <p style="margin-top: 16px;">
+        <button class="btn" onclick="FluidBg.multipleSplats(6)">随机 Splat</button>
+        <button class="btn btn-outline" id="toggleBtn">暂停</button>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    var s = {
+      s_intensity: ['SPLAT_INTENSITY', 'v_intensity'],
+      s_force: ['SPLAT_FORCE', 'v_force'],
+      s_radius: ['SPLAT_RADIUS', 'v_radius'],
+      s_dissipation: ['DENSITY_DISSIPATION', 'v_dissipation'],
+      s_curl: ['CURL', 'v_curl'],
+      s_bloom: ['BLOOM_INTENSITY', 'v_bloom']
+    };
+    Object.keys(s).forEach(function (id) {
+      document.getElementById(id).addEventListener('input', function () {
+        var key = s[id][0];
+        var val = parseFloat(this.value);
+        FluidBg.config[key] = val;
+        document.getElementById(s[id][1]).textContent = val;
+      });
+    });
+
+    document.getElementById('toggleBtn').addEventListener('click', function () {
+      FluidBg.toggle();
+      this.textContent = FluidBg.config.PAUSED ? '继续' : '暂停';
+    });
+  </script>
+</body>
+</html>
