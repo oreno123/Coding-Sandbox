@@ -1,0 +1,152 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8">
+<title>青铜纹样拆件结果</title>
+<style>
+ body{font-family:-apple-system,"PingFang SC",sans-serif;margin:0;background:#f4f1ea;color:#222}
+ header{background:#1e3d3a;color:#e9d59a;padding:24px 32px}
+ header h1{margin:0 0 6px;font-size:22px} header p{margin:0;opacity:.85;font-size:14px}
+ .stat{display:inline-block;margin-right:18px;font-size:13px}
+ section{padding:20px 32px;border-bottom:1px solid #e0dccf}
+ h2{font-size:17px;color:#1e3d3a;border-left:4px solid #c9a84a;padding-left:10px}
+ .note{font-size:13px;color:#666;margin:-4px 0 14px}
+ .big img{max-width:100%;border:1px solid #ddd;background:
+   conic-gradient(#eee 90deg,#fff 0 180deg,#eee 0 270deg,#fff 0) 0 0/20px 20px}
+ .row{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
+ .row .col{flex:1;min-width:280px}
+ .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+ figure{margin:0;background:
+   conic-gradient(#e8e8e8 90deg,#fff 0 180deg,#e8e8e8 0 270deg,#fff 0) 0 0/16px 16px;
+   border:1px solid #ddd;border-radius:6px;padding:6px;text-align:center}
+ figure img{max-width:100%;max-height:120px;object-fit:contain}
+ figcaption{font-size:11px;color:#777;margin-top:4px}
+ a.btn{display:inline-block;background:#1e3d3a;color:#e9d59a;text-decoration:none;
+   padding:6px 12px;border-radius:5px;font-size:13px;margin-right:8px}
+</style></head><body>
+<header>
+ <h1>青铜纹样拆件结果 · bronze-pattern-decompose</h1>
+ <p>源图 pattern_dark.jpg · 1080×535 · mode=dark</p>
+ <p style="margin-top:10px">
+   <span class="stat">连通域组件 <b>35</b></span>
+   <span class="stat">封闭格子 <b>44</b></span>
+   <span class="stat">对称轴 x=<b>541</b></span></p>
+</header>
+
+<section><h2>1 · 抠金丝掩膜(替代 SAM)</h2>
+ <p class="note">LAB 黄色通道阈值分割 → 形态学清理。比 SAM 干净、可调、可复现。</p>
+ <div class="big"><img src="output/visualizations/01_mask_compare.png"></div></section>
+
+<section><h2>2 · 整图去背景(透明 PNG,质量优于即梦)</h2>
+ <p class="note">左:保留原金色质感;右:重铸为统一金色。背景完全透明(棋盘格为透明示意)。</p>
+ <div class="row">
+  <div class="col"><div class="big"><img src="output/02_transparent/pattern_transparent.png"></div></div>
+  <div class="col"><div class="big"><img src="output/02_transparent/pattern_gold_flat.png"></div></div>
+ </div></section>
+
+<section><h2>3 · 矢量化(解决"填色":矢量后任意改色/缩放)</h2>
+ <p class="note">wire_mono.svg = 金丝单色路径,改 fill 即换色;pattern_color.svg = 保留金色质感的彩色矢量。</p>
+ <p><a class="btn" href="output/03_vector/wire_mono.svg">⬇ wire_mono.svg</a>
+    <a class="btn" href="output/03_vector/pattern_color.svg">⬇ pattern_color.svg</a></p>
+ <div class="row">
+  <div class="col"><div class="big"><img src="output/03_vector/preview_wire.png"></div></div>
+  <div class="col"><div class="big"><img src="output/03_vector/preview_color.png"></div></div>
+ </div></section>
+
+<section><h2>4 · 连通域拆件 · 35 块</h2>
+ <p class="note">自然分离的纹样各成一件:眼睛螺旋、四角回纹方块/圆点、卷云、小方块都被拆出。粉色虚线为对称轴。</p>
+ <div class="big"><img src="output/visualizations/02_components.png"></div>
+ <h3 style="font-size:14px">全部组件(透明 PNG,按面积排序)</h3>
+ <div class="cards"><figure><img src="output/04_connected/comp_00.png"><figcaption>#0 · 24707px</figcaption></figure>
+<figure><img src="output/04_connected/comp_01.png"><figcaption>#1 · 10341px</figcaption></figure>
+<figure><img src="output/04_connected/comp_02.png"><figcaption>#2 · 7703px</figcaption></figure>
+<figure><img src="output/04_connected/comp_03.png"><figcaption>#3 · 5966px</figcaption></figure>
+<figure><img src="output/04_connected/comp_04.png"><figcaption>#4 · 5910px</figcaption></figure>
+<figure><img src="output/04_connected/comp_05.png"><figcaption>#5 · 4027px</figcaption></figure>
+<figure><img src="output/04_connected/comp_06.png"><figcaption>#6 · 2778px</figcaption></figure>
+<figure><img src="output/04_connected/comp_07.png"><figcaption>#7 · 1730px</figcaption></figure>
+<figure><img src="output/04_connected/comp_08.png"><figcaption>#8 · 1707px</figcaption></figure>
+<figure><img src="output/04_connected/comp_09.png"><figcaption>#9 · 1380px</figcaption></figure>
+<figure><img src="output/04_connected/comp_10.png"><figcaption>#10 · 1342px</figcaption></figure>
+<figure><img src="output/04_connected/comp_11.png"><figcaption>#11 · 697px</figcaption></figure>
+<figure><img src="output/04_connected/comp_12.png"><figcaption>#12 · 687px</figcaption></figure>
+<figure><img src="output/04_connected/comp_13.png"><figcaption>#13 · 661px</figcaption></figure>
+<figure><img src="output/04_connected/comp_14.png"><figcaption>#14 · 534px</figcaption></figure>
+<figure><img src="output/04_connected/comp_15.png"><figcaption>#15 · 517px</figcaption></figure>
+<figure><img src="output/04_connected/comp_16.png"><figcaption>#16 · 447px</figcaption></figure>
+<figure><img src="output/04_connected/comp_17.png"><figcaption>#17 · 425px</figcaption></figure>
+<figure><img src="output/04_connected/comp_18.png"><figcaption>#18 · 417px</figcaption></figure>
+<figure><img src="output/04_connected/comp_19.png"><figcaption>#19 · 417px</figcaption></figure>
+<figure><img src="output/04_connected/comp_20.png"><figcaption>#20 · 390px</figcaption></figure>
+<figure><img src="output/04_connected/comp_21.png"><figcaption>#21 · 368px</figcaption></figure>
+<figure><img src="output/04_connected/comp_22.png"><figcaption>#22 · 352px</figcaption></figure>
+<figure><img src="output/04_connected/comp_23.png"><figcaption>#23 · 337px</figcaption></figure>
+<figure><img src="output/04_connected/comp_24.png"><figcaption>#24 · 318px</figcaption></figure>
+<figure><img src="output/04_connected/comp_25.png"><figcaption>#25 · 310px</figcaption></figure>
+<figure><img src="output/04_connected/comp_26.png"><figcaption>#26 · 310px</figcaption></figure>
+<figure><img src="output/04_connected/comp_27.png"><figcaption>#27 · 310px</figcaption></figure>
+<figure><img src="output/04_connected/comp_28.png"><figcaption>#28 · 309px</figcaption></figure>
+<figure><img src="output/04_connected/comp_29.png"><figcaption>#29 · 306px</figcaption></figure>
+<figure><img src="output/04_connected/comp_30.png"><figcaption>#30 · 289px</figcaption></figure>
+<figure><img src="output/04_connected/comp_31.png"><figcaption>#31 · 283px</figcaption></figure>
+<figure><img src="output/04_connected/comp_32.png"><figcaption>#32 · 280px</figcaption></figure>
+<figure><img src="output/04_connected/comp_33.png"><figcaption>#33 · 217px</figcaption></figure>
+<figure><img src="output/04_connected/comp_34.png"><figcaption>#34 · 208px</figcaption></figure></div></section>
+
+<section><h2>5 · 封闭格子填色 · 44 格(掐丝/景泰蓝逐格上色)</h2>
+ <p class="note">金丝围成的每个封闭格子=一个填色单元。下图给每格上不同色演示"填色";每格也单独导出为剪影 PNG。</p>
+ <div class="big"><img src="output/visualizations/03_cells_paint.png"></div>
+ <h3 style="font-size:14px">全部格子剪影</h3>
+ <div class="cards"><figure><img src="output/05_cells/cell_00.png"><figcaption>#0 · 23444px</figcaption></figure>
+<figure><img src="output/05_cells/cell_01.png"><figcaption>#1 · 23128px</figcaption></figure>
+<figure><img src="output/05_cells/cell_02.png"><figcaption>#2 · 18161px</figcaption></figure>
+<figure><img src="output/05_cells/cell_03.png"><figcaption>#3 · 15323px</figcaption></figure>
+<figure><img src="output/05_cells/cell_04.png"><figcaption>#4 · 15275px</figcaption></figure>
+<figure><img src="output/05_cells/cell_05.png"><figcaption>#5 · 15198px</figcaption></figure>
+<figure><img src="output/05_cells/cell_06.png"><figcaption>#6 · 3966px</figcaption></figure>
+<figure><img src="output/05_cells/cell_07.png"><figcaption>#7 · 2147px</figcaption></figure>
+<figure><img src="output/05_cells/cell_08.png"><figcaption>#8 · 2129px</figcaption></figure>
+<figure><img src="output/05_cells/cell_09.png"><figcaption>#9 · 2120px</figcaption></figure>
+<figure><img src="output/05_cells/cell_10.png"><figcaption>#10 · 2113px</figcaption></figure>
+<figure><img src="output/05_cells/cell_11.png"><figcaption>#11 · 1398px</figcaption></figure>
+<figure><img src="output/05_cells/cell_12.png"><figcaption>#12 · 1386px</figcaption></figure>
+<figure><img src="output/05_cells/cell_13.png"><figcaption>#13 · 1367px</figcaption></figure>
+<figure><img src="output/05_cells/cell_14.png"><figcaption>#14 · 1361px</figcaption></figure>
+<figure><img src="output/05_cells/cell_15.png"><figcaption>#15 · 925px</figcaption></figure>
+<figure><img src="output/05_cells/cell_16.png"><figcaption>#16 · 918px</figcaption></figure>
+<figure><img src="output/05_cells/cell_17.png"><figcaption>#17 · 724px</figcaption></figure>
+<figure><img src="output/05_cells/cell_18.png"><figcaption>#18 · 719px</figcaption></figure>
+<figure><img src="output/05_cells/cell_19.png"><figcaption>#19 · 558px</figcaption></figure>
+<figure><img src="output/05_cells/cell_20.png"><figcaption>#20 · 555px</figcaption></figure>
+<figure><img src="output/05_cells/cell_21.png"><figcaption>#21 · 490px</figcaption></figure>
+<figure><img src="output/05_cells/cell_22.png"><figcaption>#22 · 484px</figcaption></figure>
+<figure><img src="output/05_cells/cell_23.png"><figcaption>#23 · 313px</figcaption></figure>
+<figure><img src="output/05_cells/cell_24.png"><figcaption>#24 · 279px</figcaption></figure>
+<figure><img src="output/05_cells/cell_25.png"><figcaption>#25 · 260px</figcaption></figure>
+<figure><img src="output/05_cells/cell_26.png"><figcaption>#26 · 245px</figcaption></figure>
+<figure><img src="output/05_cells/cell_27.png"><figcaption>#27 · 237px</figcaption></figure>
+<figure><img src="output/05_cells/cell_28.png"><figcaption>#28 · 224px</figcaption></figure>
+<figure><img src="output/05_cells/cell_29.png"><figcaption>#29 · 223px</figcaption></figure>
+<figure><img src="output/05_cells/cell_30.png"><figcaption>#30 · 212px</figcaption></figure>
+<figure><img src="output/05_cells/cell_31.png"><figcaption>#31 · 211px</figcaption></figure>
+<figure><img src="output/05_cells/cell_32.png"><figcaption>#32 · 113px</figcaption></figure>
+<figure><img src="output/05_cells/cell_33.png"><figcaption>#33 · 97px</figcaption></figure>
+<figure><img src="output/05_cells/cell_34.png"><figcaption>#34 · 82px</figcaption></figure>
+<figure><img src="output/05_cells/cell_35.png"><figcaption>#35 · 71px</figcaption></figure>
+<figure><img src="output/05_cells/cell_36.png"><figcaption>#36 · 65px</figcaption></figure>
+<figure><img src="output/05_cells/cell_37.png"><figcaption>#37 · 64px</figcaption></figure>
+<figure><img src="output/05_cells/cell_38.png"><figcaption>#38 · 54px</figcaption></figure>
+<figure><img src="output/05_cells/cell_39.png"><figcaption>#39 · 52px</figcaption></figure>
+<figure><img src="output/05_cells/cell_40.png"><figcaption>#40 · 52px</figcaption></figure>
+<figure><img src="output/05_cells/cell_41.png"><figcaption>#41 · 51px</figcaption></figure>
+<figure><img src="output/05_cells/cell_42.png"><figcaption>#42 · 48px</figcaption></figure>
+<figure><img src="output/05_cells/cell_43.png"><figcaption>#43 · 43px</figcaption></figure></div></section>
+
+<section><h2>6 · 左右对称半</h2>
+ <p class="note">沿对称轴 x=541 切分,做完一半镜像即可,工作量减半。</p>
+ <div class="row">
+  <div class="col"><div class="big"><img src="output/06_halves/left.png"></div></div>
+  <div class="col"><div class="big"><img src="output/06_halves/right.png"></div></div>
+ </div></section>
+
+<footer style="padding:20px 32px;font-size:12px;color:#888">
+ 重新生成:<code>python3 decompose.py --input input/pattern_dark.jpg --mode dark &amp;&amp; python3 gallery.py</code>
+</footer>
+</body></html>

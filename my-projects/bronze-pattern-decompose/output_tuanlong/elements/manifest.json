@@ -1,0 +1,134 @@
+{
+  "elements": [
+    {
+      "id": 0,
+      "components": 2,
+      "area": 225123,
+      "bbox": [
+        15,
+        19,
+        2028,
+        2031
+      ],
+      "file": "elem_00.png",
+      "source": "tuanlong"
+    },
+    {
+      "id": 2,
+      "components": 6,
+      "area": 21794,
+      "bbox": [
+        752,
+        1566,
+        1309,
+        1968
+      ],
+      "file": "elem_02.png",
+      "source": "tuanlong"
+    },
+    {
+      "id": 1,
+      "components": 2,
+      "area": 16824,
+      "bbox": [
+        1211,
+        118,
+        1599,
+        507
+      ],
+      "file": "elem_01.png",
+      "source": "tuanlong"
+    },
+    {
+      "id": 5,
+      "components": 9,
+      "area": 13761,
+      "bbox": [
+        1870,
+        1574,
+        1990,
+        1990
+      ],
+      "file": "elem_05.png",
+      "source": "tuanlong"
+    },
+    {
+      "id": 4,
+      "components": 5,
+      "area": 11377,
+      "bbox": [
+        41,
+        41,
+        185,
+        385
+      ],
+      "file": "elem_04.png",
+      "source": "tuanlong"
+    },
+    {
+      "id": 6,
+      "components": 4,
+      "area": 8911,
+      "bbox": [
+        185,
+        402,
+        388,
+        717
+      ],
+      "file": "elem_06.png",
+      "source": "tuanlong"
+    },
+    {
+      "id": 8,
+      "components": 5,
+      "area": 7711,
+      "bbox": [
+        80,
+        775,
+        196,
+        1248
+      ],
+      "file": "elem_08.png",
+      "source": "tuanlong"
+    },
+    {
+      "id": 3,
+      "components": 1,
+      "area": 6054,
+      "bbox": [
+        1659,
+        1382,
+        1811,
+        1638
+      ],
+      "file": "elem_03.png",
+      "source": "tuanlong"
+    },
+    {
+      "id": 7,
+      "components": 4,
+      "area": 5383,
+      "bbox": [
+        544,
+        158,
+        727,
+        409
+      ],
+      "file": "elem_07.png",
+      "source": "tuanlong"
+    },
+    {
+      "id": 9,
+      "components": 1,
+      "area": 1673,
+      "bbox": [
+        1703,
+        896,
+        1784,
+        1042
+      ],
+      "file": "elem_09.png",
+      "source": "tuanlong"
+    }
+  ]
+}

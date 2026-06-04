@@ -1,0 +1,114 @@
+{
+  "source": "e2a19950b19324eea3ce98a72b22202d.jpg",
+  "eps": 80,
+  "elements": [
+    {
+      "id": 0,
+      "components": 1,
+      "area": 24620,
+      "bbox": [
+        57,
+        272,
+        532,
+        809
+      ],
+      "file": "elem_00.png"
+    },
+    {
+      "id": 1,
+      "components": 9,
+      "area": 12936,
+      "bbox": [
+        43,
+        189,
+        273,
+        481
+      ],
+      "file": "elem_01.png"
+    },
+    {
+      "id": 2,
+      "components": 8,
+      "area": 12524,
+      "bbox": [
+        43,
+        601,
+        273,
+        893
+      ],
+      "file": "elem_02.png"
+    },
+    {
+      "id": 3,
+      "components": 3,
+      "area": 7975,
+      "bbox": [
+        257,
+        557,
+        401,
+        833
+      ],
+      "file": "elem_03.png"
+    },
+    {
+      "id": 4,
+      "components": 3,
+      "area": 7886,
+      "bbox": [
+        257,
+        249,
+        401,
+        525
+      ],
+      "file": "elem_04.png"
+    },
+    {
+      "id": 5,
+      "components": 2,
+      "area": 5423,
+      "bbox": [
+        68,
+        456,
+        281,
+        625
+      ],
+      "file": "elem_05.png"
+    },
+    {
+      "id": 6,
+      "components": 2,
+      "area": 1914,
+      "bbox": [
+        360,
+        738,
+        446,
+        824
+      ],
+      "file": "elem_06.png"
+    },
+    {
+      "id": 7,
+      "components": 2,
+      "area": 1857,
+      "bbox": [
+        360,
+        257,
+        446,
+        344
+      ],
+      "file": "elem_07.png"
+    },
+    {
+      "id": 8,
+      "components": 4,
+      "area": 1454,
+      "bbox": [
+        409,
+        487,
+        509,
+        594
+      ],
+      "file": "elem_08.png"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "elements": [
+    {
+      "id": 1,
+      "components": 9,
+      "area": 13808,
+      "bbox": [
+        1870,
+        1574,
+        1990,
+        1990
+      ],
+      "file": "elem_01.png",
+      "source": "lianhua"
+    },
+    {
+      "id": 0,
+      "components": 5,
+      "area": 11489,
+      "bbox": [
+        41,
+        41,
+        185,
+        385
+      ],
+      "file": "elem_00.png",
+      "source": "lianhua"
+    }
+  ]
+}

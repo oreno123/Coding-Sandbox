@@ -1,0 +1,355 @@
+{
+  "elements": [
+    {
+      "id": 6,
+      "components": 4,
+      "area": 168120,
+      "bbox": [
+        399,
+        1050,
+        1001,
+        1660
+      ],
+      "file": "elem_06.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 5,
+      "components": 4,
+      "area": 167876,
+      "bbox": [
+        1049,
+        1050,
+        1652,
+        1661
+      ],
+      "file": "elem_05.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 8,
+      "components": 4,
+      "area": 167455,
+      "bbox": [
+        399,
+        392,
+        1000,
+        1003
+      ],
+      "file": "elem_08.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 7,
+      "components": 4,
+      "area": 166853,
+      "bbox": [
+        1049,
+        392,
+        1651,
+        1002
+      ],
+      "file": "elem_07.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 0,
+      "components": 1,
+      "area": 145426,
+      "bbox": [
+        137,
+        136,
+        1911,
+        1915
+      ],
+      "file": "elem_00.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 1,
+      "components": 1,
+      "area": 109315,
+      "bbox": [
+        1252,
+        236,
+        1866,
+        1215
+      ],
+      "file": "elem_01.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 2,
+      "components": 1,
+      "area": 108641,
+      "bbox": [
+        182,
+        851,
+        800,
+        1816
+      ],
+      "file": "elem_02.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 3,
+      "components": 1,
+      "area": 73318,
+      "bbox": [
+        223,
+        236,
+        799,
+        840
+      ],
+      "file": "elem_03.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 4,
+      "components": 1,
+      "area": 71698,
+      "bbox": [
+        1252,
+        1222,
+        1822,
+        1815
+      ],
+      "file": "elem_04.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 9,
+      "components": 1,
+      "area": 43787,
+      "bbox": [
+        1417,
+        1393,
+        2048,
+        2048
+      ],
+      "file": "elem_09.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 10,
+      "components": 1,
+      "area": 43096,
+      "bbox": [
+        0,
+        0,
+        631,
+        657
+      ],
+      "file": "elem_10.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 13,
+      "components": 4,
+      "area": 41554,
+      "bbox": [
+        804,
+        1661,
+        1249,
+        1871
+      ],
+      "file": "elem_13.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 14,
+      "components": 4,
+      "area": 41437,
+      "bbox": [
+        803,
+        181,
+        1248,
+        390
+      ],
+      "file": "elem_14.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 11,
+      "components": 1,
+      "area": 20463,
+      "bbox": [
+        1418,
+        0,
+        2048,
+        656
+      ],
+      "file": "elem_11.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 12,
+      "components": 1,
+      "area": 20251,
+      "bbox": [
+        0,
+        1393,
+        629,
+        2048
+      ],
+      "file": "elem_12.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 17,
+      "components": 4,
+      "area": 9730,
+      "bbox": [
+        0,
+        1441,
+        92,
+        1989
+      ],
+      "file": "elem_17.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 18,
+      "components": 4,
+      "area": 9494,
+      "bbox": [
+        1957,
+        59,
+        2048,
+        609
+      ],
+      "file": "elem_18.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 15,
+      "components": 4,
+      "area": 7725,
+      "bbox": [
+        1642,
+        0,
+        2048,
+        97
+      ],
+      "file": "elem_15.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 16,
+      "components": 3,
+      "area": 7696,
+      "bbox": [
+        0,
+        1953,
+        405,
+        2048
+      ],
+      "file": "elem_16.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 20,
+      "components": 2,
+      "area": 3426,
+      "bbox": [
+        1969,
+        1442,
+        2048,
+        1711
+      ],
+      "file": "elem_20.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 19,
+      "components": 1,
+      "area": 2935,
+      "bbox": [
+        0,
+        405,
+        77,
+        609
+      ],
+      "file": "elem_19.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 21,
+      "components": 1,
+      "area": 2349,
+      "bbox": [
+        394,
+        0,
+        574,
+        64
+      ],
+      "file": "elem_21.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 22,
+      "components": 1,
+      "area": 2292,
+      "bbox": [
+        1473,
+        0,
+        1654,
+        64
+      ],
+      "file": "elem_22.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 23,
+      "components": 1,
+      "area": 2160,
+      "bbox": [
+        395,
+        1986,
+        571,
+        2048
+      ],
+      "file": "elem_23.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 24,
+      "components": 1,
+      "area": 2122,
+      "bbox": [
+        1478,
+        1985,
+        1653,
+        2048
+      ],
+      "file": "elem_24.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 26,
+      "components": 2,
+      "area": 1170,
+      "bbox": [
+        0,
+        0,
+        106,
+        77
+      ],
+      "file": "elem_26.png",
+      "source": "yunlei"
+    },
+    {
+      "id": 25,
+      "components": 1,
+      "area": 934,
+      "bbox": [
+        1944,
+        1943,
+        2048,
+        2048
+      ],
+      "file": "elem_25.png",
+      "source": "yunlei"
+    }
+  ]
+}

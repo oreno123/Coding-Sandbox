@@ -1,0 +1,43 @@
+{
+  "elements": [
+    {
+      "id": 1,
+      "components": 9,
+      "area": 13648,
+      "bbox": [
+        1870,
+        1574,
+        1990,
+        1990
+      ],
+      "file": "elem_01.png",
+      "source": "juanco2"
+    },
+    {
+      "id": 0,
+      "components": 5,
+      "area": 11324,
+      "bbox": [
+        41,
+        41,
+        185,
+        385
+      ],
+      "file": "elem_00.png",
+      "source": "juanco2"
+    },
+    {
+      "id": 2,
+      "components": 1,
+      "area": 625,
+      "bbox": [
+        520,
+        713,
+        570,
+        776
+      ],
+      "file": "elem_02.png",
+      "source": "juanco2"
+    }
+  ]
+}

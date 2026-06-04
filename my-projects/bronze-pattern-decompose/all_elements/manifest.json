@@ -1,0 +1,635 @@
+{
+  "total": 45,
+  "elements": [
+    {
+      "id": 0,
+      "components": 2,
+      "area": 225123,
+      "bbox": [
+        15,
+        19,
+        2028,
+        2031
+      ],
+      "file": "elem_00.png",
+      "source": "tuanlong",
+      "unified_file": "tuanlong_elem_00.png"
+    },
+    {
+      "id": 2,
+      "components": 6,
+      "area": 21794,
+      "bbox": [
+        752,
+        1566,
+        1309,
+        1968
+      ],
+      "file": "elem_02.png",
+      "source": "tuanlong",
+      "unified_file": "tuanlong_elem_02.png"
+    },
+    {
+      "id": 1,
+      "components": 2,
+      "area": 16824,
+      "bbox": [
+        1211,
+        118,
+        1599,
+        507
+      ],
+      "file": "elem_01.png",
+      "source": "tuanlong",
+      "unified_file": "tuanlong_elem_01.png"
+    },
+    {
+      "id": 5,
+      "components": 9,
+      "area": 13761,
+      "bbox": [
+        1870,
+        1574,
+        1990,
+        1990
+      ],
+      "file": "elem_05.png",
+      "source": "tuanlong",
+      "unified_file": "tuanlong_elem_05.png"
+    },
+    {
+      "id": 4,
+      "components": 5,
+      "area": 11377,
+      "bbox": [
+        41,
+        41,
+        185,
+        385
+      ],
+      "file": "elem_04.png",
+      "source": "tuanlong",
+      "unified_file": "tuanlong_elem_04.png"
+    },
+    {
+      "id": 6,
+      "components": 4,
+      "area": 8911,
+      "bbox": [
+        185,
+        402,
+        388,
+        717
+      ],
+      "file": "elem_06.png",
+      "source": "tuanlong",
+      "unified_file": "tuanlong_elem_06.png"
+    },
+    {
+      "id": 8,
+      "components": 5,
+      "area": 7711,
+      "bbox": [
+        80,
+        775,
+        196,
+        1248
+      ],
+      "file": "elem_08.png",
+      "source": "tuanlong",
+      "unified_file": "tuanlong_elem_08.png"
+    },
+    {
+      "id": 3,
+      "components": 1,
+      "area": 6054,
+      "bbox": [
+        1659,
+        1382,
+        1811,
+        1638
+      ],
+      "file": "elem_03.png",
+      "source": "tuanlong",
+      "unified_file": "tuanlong_elem_03.png"
+    },
+    {
+      "id": 7,
+      "components": 4,
+      "area": 5383,
+      "bbox": [
+        544,
+        158,
+        727,
+        409
+      ],
+      "file": "elem_07.png",
+      "source": "tuanlong",
+      "unified_file": "tuanlong_elem_07.png"
+    },
+    {
+      "id": 9,
+      "components": 1,
+      "area": 1673,
+      "bbox": [
+        1703,
+        896,
+        1784,
+        1042
+      ],
+      "file": "elem_09.png",
+      "source": "tuanlong",
+      "unified_file": "tuanlong_elem_09.png"
+    },
+    {
+      "id": 1,
+      "components": 9,
+      "area": 13808,
+      "bbox": [
+        1870,
+        1574,
+        1990,
+        1990
+      ],
+      "file": "elem_01.png",
+      "source": "lianhua",
+      "unified_file": "lianhua_elem_01.png"
+    },
+    {
+      "id": 0,
+      "components": 5,
+      "area": 11489,
+      "bbox": [
+        41,
+        41,
+        185,
+        385
+      ],
+      "file": "elem_00.png",
+      "source": "lianhua",
+      "unified_file": "lianhua_elem_00.png"
+    },
+    {
+      "id": 0,
+      "components": 4,
+      "area": 1164467,
+      "bbox": [
+        26,
+        28,
+        2018,
+        2022
+      ],
+      "file": "elem_00.png",
+      "source": "huiwen",
+      "unified_file": "huiwen_elem_00.png"
+    },
+    {
+      "id": 2,
+      "components": 9,
+      "area": 13683,
+      "bbox": [
+        1870,
+        1574,
+        1990,
+        1990
+      ],
+      "file": "elem_02.png",
+      "source": "huiwen",
+      "unified_file": "huiwen_elem_02.png"
+    },
+    {
+      "id": 1,
+      "components": 5,
+      "area": 11358,
+      "bbox": [
+        41,
+        41,
+        185,
+        385
+      ],
+      "file": "elem_01.png",
+      "source": "huiwen",
+      "unified_file": "huiwen_elem_01.png"
+    },
+    {
+      "id": 6,
+      "components": 4,
+      "area": 168120,
+      "bbox": [
+        399,
+        1050,
+        1001,
+        1660
+      ],
+      "file": "elem_06.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_06.png"
+    },
+    {
+      "id": 5,
+      "components": 4,
+      "area": 167876,
+      "bbox": [
+        1049,
+        1050,
+        1652,
+        1661
+      ],
+      "file": "elem_05.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_05.png"
+    },
+    {
+      "id": 8,
+      "components": 4,
+      "area": 167455,
+      "bbox": [
+        399,
+        392,
+        1000,
+        1003
+      ],
+      "file": "elem_08.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_08.png"
+    },
+    {
+      "id": 7,
+      "components": 4,
+      "area": 166853,
+      "bbox": [
+        1049,
+        392,
+        1651,
+        1002
+      ],
+      "file": "elem_07.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_07.png"
+    },
+    {
+      "id": 0,
+      "components": 1,
+      "area": 145426,
+      "bbox": [
+        137,
+        136,
+        1911,
+        1915
+      ],
+      "file": "elem_00.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_00.png"
+    },
+    {
+      "id": 1,
+      "components": 1,
+      "area": 109315,
+      "bbox": [
+        1252,
+        236,
+        1866,
+        1215
+      ],
+      "file": "elem_01.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_01.png"
+    },
+    {
+      "id": 2,
+      "components": 1,
+      "area": 108641,
+      "bbox": [
+        182,
+        851,
+        800,
+        1816
+      ],
+      "file": "elem_02.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_02.png"
+    },
+    {
+      "id": 3,
+      "components": 1,
+      "area": 73318,
+      "bbox": [
+        223,
+        236,
+        799,
+        840
+      ],
+      "file": "elem_03.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_03.png"
+    },
+    {
+      "id": 4,
+      "components": 1,
+      "area": 71698,
+      "bbox": [
+        1252,
+        1222,
+        1822,
+        1815
+      ],
+      "file": "elem_04.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_04.png"
+    },
+    {
+      "id": 9,
+      "components": 1,
+      "area": 43787,
+      "bbox": [
+        1417,
+        1393,
+        2048,
+        2048
+      ],
+      "file": "elem_09.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_09.png"
+    },
+    {
+      "id": 10,
+      "components": 1,
+      "area": 43096,
+      "bbox": [
+        0,
+        0,
+        631,
+        657
+      ],
+      "file": "elem_10.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_10.png"
+    },
+    {
+      "id": 13,
+      "components": 4,
+      "area": 41554,
+      "bbox": [
+        804,
+        1661,
+        1249,
+        1871
+      ],
+      "file": "elem_13.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_13.png"
+    },
+    {
+      "id": 14,
+      "components": 4,
+      "area": 41437,
+      "bbox": [
+        803,
+        181,
+        1248,
+        390
+      ],
+      "file": "elem_14.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_14.png"
+    },
+    {
+      "id": 11,
+      "components": 1,
+      "area": 20463,
+      "bbox": [
+        1418,
+        0,
+        2048,
+        656
+      ],
+      "file": "elem_11.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_11.png"
+    },
+    {
+      "id": 12,
+      "components": 1,
+      "area": 20251,
+      "bbox": [
+        0,
+        1393,
+        629,
+        2048
+      ],
+      "file": "elem_12.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_12.png"
+    },
+    {
+      "id": 17,
+      "components": 4,
+      "area": 9730,
+      "bbox": [
+        0,
+        1441,
+        92,
+        1989
+      ],
+      "file": "elem_17.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_17.png"
+    },
+    {
+      "id": 18,
+      "components": 4,
+      "area": 9494,
+      "bbox": [
+        1957,
+        59,
+        2048,
+        609
+      ],
+      "file": "elem_18.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_18.png"
+    },
+    {
+      "id": 15,
+      "components": 4,
+      "area": 7725,
+      "bbox": [
+        1642,
+        0,
+        2048,
+        97
+      ],
+      "file": "elem_15.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_15.png"
+    },
+    {
+      "id": 16,
+      "components": 3,
+      "area": 7696,
+      "bbox": [
+        0,
+        1953,
+        405,
+        2048
+      ],
+      "file": "elem_16.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_16.png"
+    },
+    {
+      "id": 20,
+      "components": 2,
+      "area": 3426,
+      "bbox": [
+        1969,
+        1442,
+        2048,
+        1711
+      ],
+      "file": "elem_20.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_20.png"
+    },
+    {
+      "id": 19,
+      "components": 1,
+      "area": 2935,
+      "bbox": [
+        0,
+        405,
+        77,
+        609
+      ],
+      "file": "elem_19.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_19.png"
+    },
+    {
+      "id": 21,
+      "components": 1,
+      "area": 2349,
+      "bbox": [
+        394,
+        0,
+        574,
+        64
+      ],
+      "file": "elem_21.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_21.png"
+    },
+    {
+      "id": 22,
+      "components": 1,
+      "area": 2292,
+      "bbox": [
+        1473,
+        0,
+        1654,
+        64
+      ],
+      "file": "elem_22.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_22.png"
+    },
+    {
+      "id": 23,
+      "components": 1,
+      "area": 2160,
+      "bbox": [
+        395,
+        1986,
+        571,
+        2048
+      ],
+      "file": "elem_23.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_23.png"
+    },
+    {
+      "id": 24,
+      "components": 1,
+      "area": 2122,
+      "bbox": [
+        1478,
+        1985,
+        1653,
+        2048
+      ],
+      "file": "elem_24.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_24.png"
+    },
+    {
+      "id": 26,
+      "components": 2,
+      "area": 1170,
+      "bbox": [
+        0,
+        0,
+        106,
+        77
+      ],
+      "file": "elem_26.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_26.png"
+    },
+    {
+      "id": 25,
+      "components": 1,
+      "area": 934,
+      "bbox": [
+        1944,
+        1943,
+        2048,
+        2048
+      ],
+      "file": "elem_25.png",
+      "source": "yunlei",
+      "unified_file": "yunlei_elem_25.png"
+    },
+    {
+      "id": 1,
+      "components": 9,
+      "area": 13648,
+      "bbox": [
+        1870,
+        1574,
+        1990,
+        1990
+      ],
+      "file": "elem_01.png",
+      "source": "juanco2",
+      "unified_file": "juanco2_elem_01.png"
+    },
+    {
+      "id": 0,
+      "components": 5,
+      "area": 11324,
+      "bbox": [
+        41,
+        41,
+        185,
+        385
+      ],
+      "file": "elem_00.png",
+      "source": "juanco2",
+      "unified_file": "juanco2_elem_00.png"
+    },
+    {
+      "id": 2,
+      "components": 1,
+      "area": 625,
+      "bbox": [
+        520,
+        713,
+        570,
+        776
+      ],
+      "file": "elem_02.png",
+      "source": "juanco2",
+      "unified_file": "juanco2_elem_02.png"
+    }
+  ]
+}
