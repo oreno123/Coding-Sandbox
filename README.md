@@ -42,6 +42,9 @@ Coding-Sandbox/
 | [ai-hedge-fund](./my-projects/ai-hedge-fund/) | AI 对冲基金 POC - 18个分析师Agent + LangGraph编排 + 技术面/基本面/估值分析 + 回测引擎 |
 | [fluid-bg](./my-projects/fluid-bg/) | WebGL 流体模拟背景组件 - 一行引入，鼠标拖拽产生流动效果，支持自定义参数 |
 | [cloud-train](./my-projects/cloud-train/) | 云海列车 - WebGL 着色器动画，Three.js + GLSL 实时渲染列车穿越云海日落场景 |
+| [bronze-pattern-decompose](./my-projects/bronze-pattern-decompose/) | 青铜纹样分解工具 - 颜色阈值+DBSCAN 提取纹样元素 |
+| [java-oop-practice](./my-projects/java-oop-practice/) | Java OOP 基础练习 - 继承/多态/接口/异常/泛型/集合 10 个主题 + JUnit 测试 |
+| [java-oop-practice-advanced](./my-projects/java-oop-practice-advanced/) | Java OOP 进阶练习 - Builder 模式/事件系统/组合模式/泛型链表 + 测试 |
 
 ## Commit 规范
 
