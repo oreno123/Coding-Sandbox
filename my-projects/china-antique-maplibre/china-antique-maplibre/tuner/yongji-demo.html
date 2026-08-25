@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>循舟记 · 永济渠航拍</title>
+<link rel="stylesheet" href="assets/vendor/maplibre-gl.css">
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #d8cdb5; }
+  #stage { position: fixed; inset: 0; }
+  #map { position: absolute; inset: 0; }
+  .maplibregl-canvas { outline: none; }
+
+  /* 古卷叠层（滤镜由 JS 套在 .maplibregl-canvas-container 上） */
+  #warm { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: soft-light; z-index: 5; }
+  #vignette { position: absolute; inset: 0; pointer-events: none; z-index: 6; }
+
+  #ui { position: absolute; inset: 0; pointer-events: none; z-index: 10; font-family: "KaiTi", "STKaiti", "FangSong", serif; }
+
+  /* 片头 */
+  #titlecard {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3vh;
+    background: rgba(24, 16, 8, 0.42); z-index: 20;
+  }
+  #titlecard .t-main {
+    font-family: "SimSun", "STSong", serif; font-weight: 700;
+    font-size: 9vw; letter-spacing: 0.22em; text-indent: 0.22em;
+    color: #f2e3c2; text-shadow: 0 3px 18px rgba(0,0,0,0.65);
+  }
+  #titlecard .t-sub {
+    font-size: 2.4vw; letter-spacing: 0.5em; text-indent: 0.5em;
+    color: #d8b98a; text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  }
+  #titlecard .t-rule { width: 34vw; height: 2px; background: linear-gradient(90deg, transparent, #b98d4f, transparent); }
+
+  /* 幕次章（左上） */
+  #actlabel {
+    position: absolute; top: 4.5vh; left: 3.5vw;
+    padding: 0.7vh 1.4vw; border: 1px solid rgba(201, 162, 39, 0.75);
+    background: rgba(122, 32, 24, 0.82); color: #f0e0c0;
+    font-size: 1.6vw; letter-spacing: 0.28em;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    opacity: 0; border-radius: 2px;
+  }
+
+  /* 逐帧字幕（底部） */
+  #caption {
+    position: absolute; bottom: 7.5vh; left: 50%; transform: translateX(-50%);
+    max-width: 78vw; padding: 1.2vh 2.2vw;
+    background: rgba(26, 18, 10, 0.55); color: #f0e2c4;
+    font-size: 2.1vw; letter-spacing: 0.14em; text-align: center;
+    border-left: 3px solid #b98d4f; border-right: 3px solid #b98d4f;
+    opacity: 0; border-radius: 3px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.7);
+  }
+
+  /* 片尾 */
+  #endcard {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 2.6vh;
+    background: rgba(24, 16, 8, 0.5);
+    opacity: 0; z-index: 20;
+  }
+  #endcard .e-quote {
+    font-size: 2.9vw; letter-spacing: 0.2em; color: #f2e3c2;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.7); text-align: center; line-height: 1.9;
+  }
+  #endcard .e-src { font-size: 1.5vw; letter-spacing: 0.3em; color: #c9a76a; }
+  #endcard .e-rule { width: 26vw; height: 2px; background: linear-gradient(90deg, transparent, #b98d4f, transparent); }
+  #endcard .e-credit { font-size: 1.1vw; letter-spacing: 0.08em; color: rgba(216, 200, 165, 0.75); }
+
+  /* 进度墨线 */
+  #progress {
+    position: absolute; left: 0; bottom: 0; height: 3px; width: 0%;
+    background: linear-gradient(90deg, #7a2018, #c9a227);
+    z-index: 15; box-shadow: 0 0 6px rgba(201, 162, 39, 0.8);
+  }
+
+  /* 实地照片卡（相纸风，锚在城点上空） */
+  .photocard {
+    position: absolute; width: 420px; padding: 11px 11px 14px;
+    background: #f6f0e0; opacity: 0;
+    border: 1px solid rgba(120, 95, 60, 0.3);
+    box-shadow: 0 8px 26px rgba(30, 18, 8, 0.5), 0 2px 6px rgba(30, 18, 8, 0.35);
+    will-change: transform, opacity;
+  }
+  .photocard img {
+    width: 100%; display: block;
+    filter: sepia(0.14) contrast(1.03) saturate(0.94);
+    border: 1px solid rgba(90, 70, 40, 0.25);
+  }
+  .photocard .ph-cap {
+    margin-top: 8px; font: 600 17px/1.3 "KaiTi", "STKaiti", serif;
+    color: #4a3626; letter-spacing: 0.06em; text-align: center;
+  }
+  .photocard .ph-sub {
+    font: 400 13px/1.3 "KaiTi", "STKaiti", serif;
+    color: #8a7454; letter-spacing: 0.12em; text-align: center;
+  }
+  .photocard.narrow { width: 320px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="map"></div>
+  <div id="warm"></div>
+  <div id="vignette"></div>
+  <div id="ui">
+    <div id="actlabel"></div>
+    <div id="caption"></div>
+    <div id="photos"></div>
+    <div id="progress"></div>
+  </div>
+  <div id="titlecard">
+    <div class="t-main">循舟记</div>
+    <div class="t-rule"></div>
+    <div class="t-sub">永济渠 · 引沁南达于河 · 北通涿郡</div>
+  </div>
+  <div id="endcard">
+    <div class="e-quote">"诏发河北诸郡男女百余万开永济渠，<br>引沁水南达于河，北通涿郡，二千余里"</div>
+    <div class="e-src">——《隋书 · 食货志》</div>
+    <div class="e-rule"></div>
+    <div class="e-credit">循舟记 · 永济渠航拍 demo · 底图 EOX Sentinel-2 · 地形 AWS Terrarium · MapLibre GL</div>
+  </div>
+</div>
+
+<script src="assets/vendor/maplibre-gl.js"></script>
+<script src="assets/water-data.js"></script>
+<script src="assets/han-city-3d.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // ===== 永济渠航线（22 节点，坐标取自 yongji-canal-sites.json 同源考据） =====
+  var ROUTE = [
+    [112.45, 34.62], // 洛阳 f01
+    [113.00, 34.78], // 洛口   f02
+    [112.78, 34.90], // 河阳仓（渡河）
+    [113.40, 35.10], // 沁口·武陟 f03
+    [113.55, 35.20], // 小原村工程区 f04
+    [113.88, 35.30], // 新乡
+    [114.06, 35.40], // 汲县 f05
+    [114.17, 35.61], // 卫县
+    [114.36, 35.66], // 黎阳仓
+    [114.90, 35.97], // 内黄
+    [115.15, 36.18], // 贵乡
+    [115.40, 36.75], // 馆陶 f06
+    [115.50, 36.87], // 临清关
+    [115.67, 37.07], // 清河
+    [116.30, 37.45], // 长河
+    [116.84, 38.30], // 清池
+    [116.57, 38.71], // 平舒
+    [116.92, 38.83], // 独流口 f07
+    [117.20, 39.13], // 雍奴·三岔口
+    [116.69, 39.51], // 安次
+    [116.66, 39.91], // 潞县 f08
+    [116.36, 39.93], // 蓟县 f09
+  ];
+  // 各镜头帧落在航线顶点上的序号（f01..f09）
+  var STOPS = [0, 1, 3, 4, 6, 11, 17, 20, 21];
+
+  // ===== 字幕（按帧，浓缩自 camera-path-yongji.json 考据注记） =====
+  var ACTS = [
+    { title: '第一幕 · 黄河漕运母题', frames: [0, 1] },
+    { title: '第二幕 · 南北分流', frames: [2] },
+    { title: '第三幕 · 河北航段', frames: [3, 4, 5, 6] },
+    { title: '第四幕 · 终点叙事 · 蓟县', frames: [7, 8] },
+  ];
+  var CAPTIONS = [
+    '东都洛阳 —— 永济渠与通济渠的共线起点，自西苑经阳渠至洛口入黄河',
+    '洛口 · 渡河北上 —— 大业七年，炀帝龙舟由此转入永济渠',
+    '沁口 · 武陟 —— "引沁水南达于河"，永济渠黄河北岸的真正起点',
+    '小原村 · 沁口三大工程 —— 分水、拓渠、束水冲沙',
+    '汲县 —— 沁口段唐代淤塞后，渠首北迁至此（今卫辉）',
+    '馆陶 —— 循汉魏白沟故道北上，"工程实多循旧河道"',
+    '独流口 —— 接潞水北上的关键折转口（今静海独流镇）',
+    '潞县 —— 潞水与永济渠交汇处，距蓟县一步之遥（今通州）',
+    '蓟县 · 临朔宫 —— 永济渠终点，征高句丽水陆军资集结地',
+  ];
+
+  var DUR = { title: 3200, fly: 3800, hold: 1900, lastHold: 5200 };
+
+  // ===== 实地照片卡（真实考察影像 + 河北段资料图，锚定航线点位，错峰显示） =====
+  var PHOTOS = [
+    { lng: 112.45, lat: 34.62, img: 'assets/photos/p1-museum.jpg', cap: '隋唐大运河文化博物馆', sub: '洛阳 · 2026.08.07', win: [1800, 7200], rot: -2.5, dx: -64 },
+    { lng: 113.00, lat: 34.78, img: 'assets/photos/p2-luohe.jpg', cap: '洛河 · 通济渠水源踏查', sub: '洛阳 · 2026.08.07', win: [7200, 11200], rot: 2, dx: 64 },
+    { lng: 113.40, lat: 35.10, img: 'assets/photos/p3-quishou.jpg', cap: '人民胜利渠渠首（1952）', sub: '武陟', win: [12800, 17000], rot: -2, dx: -64, narrow: true },
+    { lng: 113.55, lat: 35.20, img: 'assets/photos/p4-taocang.jpg', cap: '焦作市博物馆 · 汉代陶仓楼', sub: '焦作 · 2026.08.18', win: [17000, 20600], rot: 2.5, dx: 64 },
+    { lng: 114.06, lat: 35.40, img: 'assets/photos/p5-wangjing.jpg', cap: '望京楼', sub: '卫辉 · 资料图', win: [23200, 27000], rot: -2.5, dx: -64 },
+    { lng: 115.40, lat: 36.75, img: 'assets/photos/p6-linqing.jpg', cap: '临清 · 运河古城', sub: '资料图', win: [28900, 32700], rot: 2, dx: 64 },
+    { lng: 116.92, lat: 38.83, img: 'assets/photos/p7-duliuzhen.jpg', cap: '独流镇', sub: '静海 · 资料图', win: [34600, 38400], rot: -2, dx: -64 },
+    { lng: 116.66, lat: 39.91, img: 'assets/photos/p8-randeng.jpg', cap: '燃灯塔', sub: '通州 · 资料图', win: [40300, 44100], rot: 2.5, dx: 64, narrow: true },
+    { lng: 116.36, lat: 39.93, img: 'assets/photos/p9-jicheng.jpg', cap: '蓟城纪念柱', sub: '北京 · 资料图', win: [46000, 49800], rot: -2.5, dx: -64, narrow: true },
+  ];
+
+  function $(id) { return document.getElementById(id); }
+  function loadJSON(u) { return fetch(u).then(function (r) { return r.json(); }); }
+
+  // 航线累计长度分数（平面近似 + 纬度校正，短距足够）
+  var cum = [0], TOTALD = 0;
+  for (var i = 1; i < ROUTE.length; i++) {
+    var dx = (ROUTE[i][0] - ROUTE[i - 1][0]) * Math.cos((ROUTE[i][1] + ROUTE[i - 1][1]) / 2 * Math.PI / 180);
+    var dy = ROUTE[i][1] - ROUTE[i - 1][1];
+    TOTALD += Math.sqrt(dx * dx + dy * dy);
+    cum.push(TOTALD);
+  }
+  var STOPFRAC = STOPS.map(function (idx) { return cum[idx] / TOTALD; });
+
+  var qs = new URLSearchParams(location.search);
+  var seekT = qs.has('t') ? parseFloat(qs.get('t')) : null;
+  var MODE = qs.get('mode') || 'main'; // main | solo(单镜头) | transA(总览→洛阳) | transB(蓟县→拉起到总览)
+  var TRANS_MS = 6000;
+  var SOLO_SHOT = qs.has('shot') ? parseInt(qs.get('shot'), 10) : null;
+  var SOLO_DUR = qs.has('dur') ? parseFloat(qs.get('dur')) : 5000;
+  var SOLO_BASE = qs.has('base') ? parseFloat(qs.get('base')) : 0;
+  var OVERVIEW = { center: [114.4, 37.25], zoom: 7.0, pitch: 35, bearing: 0 };
+
+  Promise.all([
+    loadJSON('presets/antique-yongji-canal.json'),
+    loadJSON('assets/yongji-canal-sites.json'),
+    loadJSON('camera-path-yongji.json'),
+  ]).then(function (bundle) {
+    var preset = bundle[0], sites = bundle[1], pathJson = bundle[2];
+    var frames = pathJson.frames;
+    var m = preset.maplibre;
+
+    // ---- demo 调色板（?pal=qinglv|shuimo|jinbi|bose，默认青绿山水） ----
+    var PALLIST = {
+      qinglv: { // 青绿山水：石青阴坡 + 石绿阳坡 + 鎏金黄河
+        hs: ['rgba(24,80,96,0.88)', 'rgba(118,180,140,0.72)', 'rgba(52,128,116,0.62)', 0.5],
+        w1: 'rgba(23,94,98,0.95)', w2: 'rgba(30,108,104,0.92)', w3: 'rgba(42,122,112,0.85)',
+        lake: 'rgba(26,98,104,0.82)', lakeO: 'rgba(70,144,134,0.9)',
+        hh: 'rgba(201,143,54,0.95)', hhW: [3.5, 8, 18], sat: 1, con: 1,
+      },
+      shuimo: { // 水墨黛青：墨色山影 + 黛蓝水 + 内敛土金
+        hs: ['rgba(40,52,66,0.85)', 'rgba(148,160,168,0.60)', 'rgba(90,105,118,0.50)', 0.45],
+        w1: 'rgba(42,66,92,0.92)', w2: 'rgba(52,78,102,0.88)', w3: 'rgba(66,92,112,0.80)',
+        lake: 'rgba(48,72,96,0.78)', lakeO: 'rgba(96,120,140,0.85)',
+        hh: 'rgba(168,132,74,0.90)', hhW: [3, 7, 16], sat: 0.85, con: 1.02,
+      },
+      jinbi: { // 金碧山水：暖褐山 + 碧绿水 + 亮金黄河，最浓
+        hs: ['rgba(74,52,26,0.85)', 'rgba(212,178,102,0.70)', 'rgba(160,120,60,0.55)', 0.55],
+        w1: 'rgba(18,120,110,0.95)', w2: 'rgba(24,132,116,0.92)', w3: 'rgba(38,144,120,0.85)',
+        lake: 'rgba(20,126,112,0.82)', lakeO: 'rgba(80,180,150,0.90)',
+        hh: 'rgba(226,168,58,0.97)', hhW: [4, 9, 20], sat: 1.12, con: 1.05,
+      },
+      bose: { // 绢本设色：暖褐山 + 靛蓝水，最素
+        hs: ['rgba(72,56,40,0.80)', 'rgba(196,172,132,0.62)', 'rgba(140,116,84,0.50)', 0.4],
+        w1: 'rgba(44,74,102,0.90)', w2: 'rgba(54,86,110,0.85)', w3: 'rgba(68,100,122,0.78)',
+        lake: 'rgba(52,82,106,0.75)', lakeO: 'rgba(110,140,158,0.80)',
+        hh: 'rgba(178,124,60,0.92)', hhW: [3, 7.5, 17], sat: 0.95, con: 1,
+      },
+    };
+    var P = PALLIST[qs.get('pal')] || PALLIST.qinglv;
+    m.hillshade.exaggeration = P.hs[3];
+    m.hillshade.shadowColor = P.hs[0];
+    m.hillshade.highlightColor = P.hs[1];
+    m.hillshade.accentColor = P.hs[2];
+    m.satellite.opacity = 0.68;              // 预设 0.55
+    m.water.riverL1Width *= 1.3;
+    m.water.riverL2Width *= 1.3;
+    m.water.riverL3Width *= 1.3;
+    m.water.riverLevel1 = P.w1;
+    m.water.riverLevel2 = P.w2;
+    m.water.riverLevel3 = P.w3;
+    m.water.lakeFill = P.lake;
+    m.water.lakeOutline = P.lakeO;
+    var HH_COLOR = P.hh, HH_W = P.hhW;
+
+    // ---- 古卷 CSS 叠层（canvas container 要等 Map 构造后才存在，滤镜在 load 里套） ----
+    var c = preset.css;
+    c.saturate *= P.sat;
+    c.contrast *= P.con;
+    (function () {
+      var h = c.warmTintColor.replace('#', '');
+      var r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
+      $('warm').style.background = 'rgba(' + r + ',' + g + ',' + b + ',' + c.warmTintAlpha + ')';
+    })();
+    $('vignette').style.background =
+      'radial-gradient(ellipse at center, transparent 42%, rgba(46,28,16,' + c.vignetteStrength + ') 100%)';
+
+    // ---- 地图 ----
+    var setRouteProgress = function () {}; // load 后被真实现覆盖（render 在外层作用域调用）
+
+    var map = new maplibregl.Map({
+      container: 'map',
+      style: {
+        version: 8, sources: {},
+        layers: [{ id: 'background', type: 'background', paint: { 'background-color': m.backgroundColor } }],
+      },
+      center: frames[0].center, zoom: frames[0].zoom, pitch: frames[0].pitch, bearing: frames[0].bearing,
+      attributionControl: false, maxPitch: 70, antialias: true,
+    });
+    window.__map = map;
+
+    function waitIdle(timeout) {
+      return new Promise(function (res) {
+        var done = false;
+        function fin() { if (!done) { done = true; res(); } }
+        map.once('idle', fin);
+        setTimeout(fin, timeout || 9000);
+      });
+    }
+
+    map.on('load', function () {
+      document.querySelector('.maplibregl-canvas-container').style.filter =
+        'sepia(' + c.sepia + ') saturate(' + c.saturate + ') contrast(' + c.contrast +
+        ') brightness(' + c.brightness + ') hue-rotate(' + c.hueRotate + 'deg)';
+
+      // Terrarium DEM —— 必须 encoding: 'terrarium'
+      map.addSource('dem', {
+        type: 'raster-dem',
+        tiles: [
+          'https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png',
+          'https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png',
+        ],
+        tileSize: 256, maxzoom: 15, encoding: 'terrarium',
+      });
+      map.setTerrain({ source: 'dem', exaggeration: m.terrainExaggeration });
+
+      // 卫星底图（EOX，注意 {z}/{y}/{x} 顺序）
+      map.addSource('satellite', {
+        type: 'raster',
+        tiles: ['https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/g/{z}/{y}/{x}.jpg'],
+        tileSize: 256, maxzoom: 14,
+      });
+      map.addLayer({
+        id: 'satellite', type: 'raster', source: 'satellite',
+        paint: {
+          'raster-opacity': m.satellite.opacity,
+          'raster-saturation': m.satellite.saturation,
+          'raster-contrast': m.satellite.contrast,
+          'raster-brightness-min': m.satellite.brightnessMin,
+          'raster-brightness-max': m.satellite.brightnessMax,
+          'raster-hue-rotate': m.satellite.hueRotate,
+        },
+      }, 'background');
+
+      // 山影
+      map.addLayer({
+        id: 'hillshade', type: 'hillshade', source: 'dem',
+        paint: {
+          'hillshade-exaggeration': Math.min(1, Math.max(0, m.hillshade.exaggeration)),
+          'hillshade-illumination-direction': m.hillshade.illuminationDirection,
+          'hillshade-shadow-color': m.hillshade.shadowColor,
+          'hillshade-highlight-color': m.hillshade.highlightColor,
+          'hillshade-accent-color': m.hillshade.accentColor,
+        },
+      });
+
+      // 水系四层（自然河湖底网；高亮层由自建永济渠航线代替）
+      var w = m.water;
+      var wd = window.CHINA_WATER_DATA || {};
+      function riverLayer(id, data, color, width, factor) {
+        if (!data) return;
+        map.addSource(id + '-src', { type: 'geojson', data: data });
+        map.addLayer({
+          id: id, type: 'line', source: id + '-src',
+          paint: {
+            'line-color': color,
+            'line-width': [
+              'interpolate', ['linear'], ['zoom'],
+              3, width * factor, 6, width, 10, width * (2 - factor),
+            ],
+          },
+          layout: { 'line-cap': 'round', 'line-join': 'round' },
+        });
+      }
+      if (wd.chinaLakes) {
+        map.addSource('lakes', { type: 'geojson', data: wd.chinaLakes });
+        map.addLayer({ id: 'lakes-fill', type: 'fill', source: 'lakes', paint: { 'fill-color': w.lakeFill } });
+        map.addLayer({ id: 'lakes-outline', type: 'line', source: 'lakes', paint: { 'line-color': w.lakeOutline, 'line-width': 0.8 } });
+      }
+      riverLayer('river-l3', wd.riverLevel3, w.riverLevel3, w.riverL3Width, 0.35);
+      riverLayer('river-l2', wd.riverLevel2, w.riverLevel2, w.riverL2Width, 0.4);
+      riverLayer('river-l1', wd.riverLevel1, w.riverLevel1, w.riverL1Width, 0.45);
+
+      // 黄河独立高亮（鎏金赭黄宽线：自然河之首 vs 朱红人工渠，第一幕叙事主角）
+      (function () {
+        var src = (wd.riverLevel1 && wd.riverLevel1.features) || [];
+        var hh = src.filter(function (f) {
+          return /^黄河$/.test(((f.properties || {}).name || '').trim());
+        });
+        if (hh.length) {
+          map.addSource('huanghe-src', {
+            type: 'geojson',
+            data: { type: 'FeatureCollection', features: hh },
+          });
+          map.addLayer({
+            id: 'huanghe', type: 'line', source: 'huanghe-src',
+            paint: {
+              'line-color': HH_COLOR,
+              'line-width': ['interpolate', ['linear'], ['zoom'], 4, HH_W[0], 8, HH_W[1], 12, HH_W[2]],
+            },
+            layout: { 'line-cap': 'round', 'line-join': 'round' },
+          });
+        }
+      })();
+
+      // 永济渠航线（lineMetrics 支持 line-progress 渐进绘制）
+      var routeGeoJSON = {
+        type: 'Feature',
+        properties: {},
+        geometry: { type: 'LineString', coordinates: ROUTE },
+      };
+      map.addSource('yongji-route', { type: 'geojson', data: routeGeoJSON, lineMetrics: true });
+      function gradExpr(color) {
+        return [
+          'interpolate', ['linear'], ['line-progress'],
+          0, color, 0.001, color, 0.0015, 'rgba(0,0,0,0)', 1, 'rgba(0,0,0,0)',
+        ];
+      }
+      map.addLayer({
+        id: 'yongji-glow', type: 'line', source: 'yongji-route',
+        paint: {
+          'line-color': 'rgba(0,0,0,0)',
+          'line-width': ['interpolate', ['linear'], ['zoom'], 6, 8, 10, 16],
+          'line-blur': 3,
+          'line-gradient': gradExpr('rgba(201,162,39,0.55)'),
+        },
+        layout: { 'line-cap': 'round', 'line-join': 'round' },
+      });
+      map.addLayer({
+        id: 'yongji-core', type: 'line', source: 'yongji-route',
+        paint: {
+          'line-color': 'rgba(0,0,0,0)',
+          'line-width': ['interpolate', ['linear'], ['zoom'], 6, 2.4, 10, 5],
+          'line-gradient': gradExpr('rgba(160,48,40,1)'),
+        },
+        layout: { 'line-cap': 'round', 'line-join': 'round' },
+      });
+
+      setRouteProgress = function (p) {
+        p = Math.max(0.0015, Math.min(0.9985, p));
+        var q = p + 0.001;
+        map.setPaintProperty('yongji-glow', 'line-gradient', [
+          'interpolate', ['linear'], ['line-progress'],
+          0, 'rgba(201,162,39,0.55)', p, 'rgba(201,162,39,0.55)', q, 'rgba(0,0,0,0)', 1, 'rgba(0,0,0,0)',
+        ]);
+        map.setPaintProperty('yongji-core', 'line-gradient', [
+          'interpolate', ['linear'], ['line-progress'],
+          0, 'rgba(160,48,40,1)', p, 'rgba(160,48,40,1)', q, 'rgba(0,0,0,0)', 1, 'rgba(0,0,0,0)',
+        ]);
+      };
+      window.__setRoute = setRouteProgress;
+
+      // 汉风城池挤出 + 标签（fill-extrusion，无需 THREE）
+      if (window.HanCity3D) {
+        window.__cities = window.HanCity3D.addExtrusionCities(map, maplibregl, {
+          cities: sites, halfKm: preset.cities.halfKm, visible: true,
+        });
+      }
+
+      setRouteProgress(0);
+      window.__ready = false;
+      map.jumpTo({ center: frames[0].center, zoom: frames[0].zoom, pitch: frames[0].pitch, bearing: frames[0].bearing });
+      waitIdle(12000).then(function () {
+        window.__ready = true;
+        document.title = 'READY';
+        if (seekT != null) {
+          render(seekT * 1000, true);
+          waitIdle(12000).then(function () { window.__seekReady = true; });
+        } else {
+          setTimeout(startPlay, 500);
+        }
+      });
+    });
+
+    // ---- 时间轴 ----
+    // 结构：title 段 → [fly(i→i+1), hold(i+1)] × 8（末帧长 hold）
+    var TL = [{ type: 'title', t0: 0, t1: DUR.title }];
+    var t = DUR.title;
+    for (var s = 0; s < frames.length - 1; s++) {
+      TL.push({ type: 'fly', from: s, to: s + 1, t0: t, t1: t + DUR.fly });
+      t += DUR.fly;
+      var hold = (s + 1 === frames.length - 1) ? DUR.lastHold : DUR.hold;
+      TL.push({ type: 'hold', frame: s + 1, t0: t, t1: t + hold });
+      t += hold;
+    }
+    var TOTAL = t + 2600; // 末尾留给片尾卡淡入
+    window.__total = (MODE === 'main') ? TOTAL : (MODE === 'solo' ? SOLO_DUR : TRANS_MS);
+
+    function easeInOut(k) { return k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; }
+    function lerp(a, b, k) { return a + (b - a) * k; }
+    function lerpCam(A, B, k) {
+      return {
+        center: [lerp(A.center[0], B.center[0], k), lerp(A.center[1], B.center[1], k)],
+        zoom: lerp(A.zoom, B.zoom, k),
+        pitch: lerp(A.pitch, B.pitch, k),
+        bearing: lerp(A.bearing, B.bearing, k),
+      };
+    }
+
+    var capState = null; // 当前字幕 {frame, start, end}
+    var lastAct = -1, actShownAt = 0;
+
+    function frameAct(fi) {
+      for (var a = 0; a < ACTS.length; a++) if (ACTS[a].frames.indexOf(fi) >= 0) return a;
+      return 0;
+    }
+
+    function render(ms, still) {
+      if (MODE === 'solo') { renderSolo(ms); return; }
+      if (MODE !== 'main') { renderTrans(ms); return; }
+      var seg = TL[TL.length - 1];
+      for (var i = 0; i < TL.length; i++) {
+        if (ms >= TL[i].t0 && ms < TL[i].t1) { seg = TL[i]; break; }
+      }
+
+      if (seg.type === 'fly') {
+        var k = easeInOut((ms - seg.t0) / (seg.t1 - seg.t0));
+        map.jumpTo(lerpCam(frames[seg.from], frames[seg.to], k));
+        setRouteProgress(lerp(STOPFRAC[seg.from], STOPFRAC[seg.to], Math.min(1, k * 1.15)));
+      } else if (seg.type === 'hold') {
+        var f = frames[seg.frame];
+        var hk = (ms - seg.t0) / 1000; // 呼吸漂移：缓慢左旋 + 微推近
+        map.jumpTo({
+          center: f.center, zoom: f.zoom + Math.min(hk * 0.012, 0.08),
+          pitch: f.pitch, bearing: f.bearing - Math.min(hk * 0.5, 1.6),
+        });
+        setRouteProgress(STOPFRAC[seg.frame]);
+        if (!capState || capState.frame !== seg.frame) {
+          capState = { frame: seg.frame, start: seg.t0, end: seg.t1 };
+        }
+      }
+
+      // 字幕（600ms 淡入 / 300ms 淡出尾，全部由时间参数驱动——逐帧录制确定性）
+      var capOp = 0;
+      if (capState) {
+        if (ms >= capState.start && ms < capState.start + 600) capOp = (ms - capState.start) / 600;
+        else if (ms >= capState.start + 600 && ms < capState.end) capOp = 1;
+        else if (ms >= capState.end && ms < capState.end + 300) capOp = 1 - (ms - capState.end) / 300;
+        $('caption').textContent = CAPTIONS[capState.frame];
+      }
+      $('caption').style.opacity = capOp;
+
+      // 幕次章（700ms 淡入）
+      if (seg.type !== 'title') {
+        var fi = seg.type === 'fly' ? seg.from : seg.frame;
+        var ai = frameAct(fi);
+        if (ai !== lastAct) {
+          lastAct = ai;
+          actShownAt = ms;
+          $('actlabel').textContent = ACTS[ai].title;
+        }
+      }
+      $('actlabel').style.opacity = lastAct < 0 ? 0 : Math.min(1, (ms - actShownAt) / 700);
+
+      // 片头淡出（最后 1.1s）／片尾淡入（TOTAL-3600 起 1.4s）
+      var to = DUR.title - 1100;
+      $('titlecard').style.opacity = ms <= to ? 1 : (ms >= DUR.title ? 0 : 1 - (ms - to) / 1100);
+      $('endcard').style.opacity = ms <= TOTAL - 3600 ? 0 : Math.min(1, (ms - (TOTAL - 3600)) / 1400);
+
+      $('progress').style.width = (Math.min(ms / TOTAL, 1) * 100).toFixed(2) + '%';
+
+      // 照片卡（懒建 DOM，锚点投影 + 时间窗淡入淡出 + 上浮）
+      updatePhotos(ms);
+    }
+
+    function updatePhotos(effMs) {
+      for (var pi = 0; pi < PHOTOS.length; pi++) {
+        var ph = PHOTOS[pi];
+        if (!ph._el) {
+          var pel = document.createElement('div');
+          pel.className = 'photocard' + (ph.narrow ? ' narrow' : '');
+          pel.innerHTML = '<img src="' + ph.img + '"><div class="ph-cap">' + ph.cap +
+            '</div><div class="ph-sub">' + ph.sub + '</div>';
+          $('photos').appendChild(pel);
+          ph._el = pel;
+        }
+        var pop = 0, plift = 24;
+        if (effMs >= ph.win[0] && effMs <= ph.win[1]) {
+          var pIn = Math.min(1, (effMs - ph.win[0]) / 400);
+          var pOut = Math.min(1, (ph.win[1] - effMs) / 300);
+          pop = Math.min(pIn, pOut);
+          plift = (1 - pIn) * 24;
+        }
+        var ppt = window.__map.project([ph.lng, ph.lat]);
+        if (ppt.x < 140 || ppt.x > 1780 || ppt.y < 120 || ppt.y > 1020) pop = 0;
+        ph._el.style.left = ppt.x + 'px';
+        ph._el.style.top = ppt.y + 'px';
+        ph._el.style.opacity = pop;
+        ph._el.style.transform =
+          'translate(-50%,-100%) translate(' + ph.dx + 'px,' + (-84 - plift) + 'px) rotate(' + ph.rot + 'deg)';
+      }
+    }
+
+    // ---- 转场小片（mode=transA/transB，独立 6s，供剪辑衔接主线） ----
+    function setRouteGhost(a) {
+      if (!a || a <= 0) { setRouteProgress(0.0015); return; }
+      var p = 0.9985, q = p + 0.0001;
+      var glow = 'rgba(201,162,39,' + (0.55 * a).toFixed(3) + ')';
+      var core = 'rgba(160,48,40,' + Math.min(1, a).toFixed(3) + ')';
+      map.setPaintProperty('yongji-glow', 'line-gradient', [
+        'interpolate', ['linear'], ['line-progress'],
+        0, glow, p, glow, q, 'rgba(0,0,0,0)', 1, 'rgba(0,0,0,0)',
+      ]);
+      map.setPaintProperty('yongji-core', 'line-gradient', [
+        'interpolate', ['linear'], ['line-progress'],
+        0, core, p, core, q, 'rgba(0,0,0,0)', 1, 'rgba(0,0,0,0)',
+      ]);
+    }
+
+    function renderTrans(ms) {
+      if (MODE === 'transA') {
+        // 总览静观 1.8s → 俯冲洛阳 4.2s；航线幽灵先显后隐；末帧对齐主线 t=3200（p1 卡入场）
+        if (ms < 1800) {
+          map.jumpTo({
+            center: OVERVIEW.center, zoom: OVERVIEW.zoom + (ms / 1800) * 0.06,
+            pitch: OVERVIEW.pitch, bearing: OVERVIEW.bearing,
+          });
+          setRouteGhost(0.5);
+        } else {
+          var k = easeInOut(Math.min(1, (ms - 1800) / 4200));
+          map.jumpTo(lerpCam(OVERVIEW, frames[0], k));
+          setRouteGhost(ms < 3900 ? 0.5 : Math.max(0, 0.5 * (1 - (ms - 3900) / 1400)));
+        }
+        updatePhotos(ms - TRANS_MS + DUR.title);
+        $('progress').style.width = (Math.min((ms - TRANS_MS + DUR.title) / TOTAL, 1) * 100).toFixed(2) + '%';
+      } else {
+        // 蓟县终景呼吸 1.5s → 拉起到总览 4.5s；航线全程满辉（旅程完成回顾）
+        var f9 = frames[frames.length - 1];
+        if (ms < 1500) {
+          var hk = ms / 1000;
+          map.jumpTo({
+            center: f9.center, zoom: f9.zoom + Math.min(hk * 0.012, 0.08),
+            pitch: f9.pitch, bearing: f9.bearing - Math.min(hk * 0.5, 1.6),
+          });
+        } else {
+          var k2 = easeInOut(Math.min(1, (ms - 1500) / 4500));
+          map.jumpTo(lerpCam(f9, OVERVIEW, k2));
+        }
+        setRouteProgress(0.9985);
+        $('progress').style.width = '100%';
+      }
+      $('caption').style.opacity = 0;
+      $('actlabel').style.opacity = 0;
+      $('titlecard').style.opacity = 0;
+      $('endcard').style.opacity = 0;
+    }
+
+    // ---- 单镜头模式（mode=solo&shot=N&dur=ms&base=ms）：只渲一个镜头卡，供独立片段/配音对位 ----
+    function renderSolo(ms) {
+      var f = frames[SOLO_SHOT] || frames[0];
+      var hk = ms / 1000;
+      map.jumpTo({
+        center: f.center, zoom: f.zoom + Math.min(hk * 0.012, 0.08),
+        pitch: f.pitch, bearing: f.bearing - Math.min(hk * 0.5, 1.6),
+      });
+      setRouteProgress(STOPFRAC[SOLO_SHOT] || STOPFRAC[0]);
+      var capOp = ms < 600 ? ms / 600 : (ms > SOLO_DUR - 300 ? Math.max(0, (SOLO_DUR - ms) / 300) : 1);
+      $('caption').textContent = CAPTIONS[SOLO_SHOT] || '';
+      $('caption').style.opacity = capOp;
+      var ai = frameAct(SOLO_SHOT);
+      $('actlabel').textContent = ACTS[ai].title;
+      $('actlabel').style.opacity = Math.min(1, ms / 700);
+      $('titlecard').style.opacity = 0;
+      $('endcard').style.opacity = 0;
+      $('progress').style.width = (Math.min(ms / SOLO_DUR, 1) * 100).toFixed(2) + '%';
+      updatePhotos(ms + SOLO_BASE);
+    }
+
+    function startPlay() {
+      var t0 = null;
+      document.title = 'PLAYING';
+      // 录制标记：起点打 150ms 全黑闪，供 ffmpeg blackdetect 定位裁剪点
+      var tc = $('titlecard');
+      var oldBg = tc.style.background;
+      tc.style.background = '#000';
+      setTimeout(function () { tc.style.background = oldBg; }, 150);
+      function tick(now) {
+        if (t0 === null) t0 = now;
+        var ms = now - t0;
+        if (ms >= TOTAL) {
+          render(TOTAL - 1);
+          document.title = 'DONE';
+          window.__done = true;
+          return;
+        }
+        render(ms);
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+    window.__render = render;
+    window.__play = startPlay;
+    // 逐帧录制用：seek 到 t、等该帧渲染完成（render 事件 + 一拍 rAF，3s 兜底）
+    window.__renderShot = function (tMs) {
+      return new Promise(function (res) {
+        render(tMs, true);
+        var settled = false;
+        function fin() { if (!settled) { settled = true; res(true); } }
+        try {
+          window.__map.once('render', function () { requestAnimationFrame(fin); });
+        } catch (e) { /* map 未建则直接放行 */ }
+        setTimeout(fin, 3000);
+      });
+    };
+  });
+})();
+</script>
+</body>
+</html>

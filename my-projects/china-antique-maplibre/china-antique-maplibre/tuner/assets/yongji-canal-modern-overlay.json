@@ -1,0 +1,250 @@
+{
+  "id": "yongji-canal-modern-overlay",
+  "label": "循舟记 · 永济渠古今对照 v1",
+  "version": 1,
+  "createdAt": "2026-08-12T18:30:00",
+  "description": "隋代永济渠沿线 24 个历史点位与现代地名的对照表。用于循舟记'古今对照'叙事层——同画面叠两套点（隋代朱漆 vs 现代白漆），用透明度交叉切换做时间穿越效果。",
+  "usage": "MapLibre 里作为第二个 GeoJSON source 加载，配独立的 symbol/fill-extrusion layer。建议配色：现代点用半透明白色（#f5f5f5 alpha 0.6），避免抢朱漆隋代点的视觉主角。",
+  "mappings": [
+    {
+      "historicalId": "luoyang",
+      "historicalName": "洛阳",
+      "modernName": "洛阳市",
+      "modernProvince": "河南",
+      "modernDistrict": "洛阳市老城区/瀍河区",
+      "modernLng": 112.45,
+      "modernLat": 34.62,
+      "note": "隋东都遗址在今洛阳老城区一带，含嘉仓遗址已建考古遗址公园"
+    },
+    {
+      "historicalId": "hanjia-cang",
+      "historicalName": "含嘉仓",
+      "modernName": "含嘉仓遗址",
+      "modernProvince": "河南",
+      "modernDistrict": "洛阳市老城区北郊",
+      "modernLng": 112.47,
+      "modernLat": 34.68,
+      "note": "已发掘，今隋唐洛阳城国家遗址公园含嘉仓 160 号仓窖展示点"
+    },
+    {
+      "historicalId": "huiluo-cang",
+      "historicalName": "回洛仓",
+      "modernName": "回洛仓遗址",
+      "modernProvince": "河南",
+      "modernDistrict": "洛阳市瀍河区小李村",
+      "modernLng": 112.43,
+      "modernLat": 34.70,
+      "note": "2014 年考古确认仓城，已建遗址博物馆"
+    },
+    {
+      "historicalId": "heyang-cang",
+      "historicalName": "河阳仓",
+      "modernName": "孟州市",
+      "modernProvince": "河南",
+      "modernDistrict": "焦作市孟州（黄河北岸）",
+      "modernLng": 112.78,
+      "modernLat": 34.90,
+      "note": "河阳三城遗址在今孟州南，河阳桥跨黄河处"
+    },
+    {
+      "historicalId": "wuzhi",
+      "historicalName": "武陟",
+      "modernName": "武陟县",
+      "modernProvince": "河南",
+      "modernDistrict": "焦作市武陟县",
+      "modernLng": 113.40,
+      "modernLat": 35.10,
+      "note": "沁河在此入黄，仍是黄沁水利枢纽"
+    },
+    {
+      "historicalId": "xinxiang",
+      "historicalName": "新乡",
+      "modernName": "新乡市",
+      "modernProvince": "河南",
+      "modernDistrict": "新乡市卫滨区",
+      "modernLng": 113.88,
+      "modernLat": 35.30,
+      "note": "京广铁路枢纽，隋新乡县治即在今新乡市区"
+    },
+    {
+      "historicalId": "weixian",
+      "historicalName": "卫县",
+      "modernName": "淇县",
+      "modernProvince": "河南",
+      "modernDistrict": "鹤壁市淇县东",
+      "modernLng": 114.17,
+      "modernLat": 35.61,
+      "note": "隋汲郡卫县在今淇县东，朝歌故地（即《封神演义》朝歌城址）"
+    },
+    {
+      "historicalId": "liyang-cang",
+      "historicalName": "黎阳仓",
+      "modernName": "浚县黎阳仓遗址",
+      "modernProvince": "河南",
+      "modernDistrict": "鹤壁市浚县大伾山北麓",
+      "modernLng": 114.36,
+      "modernLat": 35.66,
+      "note": "已发掘出仓窖群，与大伾山石刻同为全国重点文保单位"
+    },
+    {
+      "historicalId": "dapi-shan",
+      "historicalName": "大伾山",
+      "modernName": "大伾山风景名胜区",
+      "modernProvince": "河南",
+      "modernDistrict": "鹤壁市浚县",
+      "modernLng": 114.35,
+      "modernLat": 35.68,
+      "note": "北魏摩崖石刻群 + 22 米弥勒大石佛，全国重点文保"
+    },
+    {
+      "historicalId": "neihuang",
+      "historicalName": "内黄",
+      "modernName": "内黄县",
+      "modernProvince": "河南",
+      "modernDistrict": "安阳市内黄县",
+      "modernLng": 114.90,
+      "modernLat": 35.97,
+      "note": "颛顼帝喾二帝陵所在地，仍为安阳辖县"
+    },
+    {
+      "historicalId": "yecheng-ruins",
+      "historicalName": "邺城遗址",
+      "modernName": "邺城遗址（临漳县）",
+      "modernProvince": "河北",
+      "modernDistrict": "邯郸市临漳县西南邺镇",
+      "modernLng": 114.60,
+      "modernLat": 36.34,
+      "note": "全国重点文保单位·邺城国家考古遗址公园（含铜雀台、冰井台等遗址）"
+    },
+    {
+      "historicalId": "weixian-hebei",
+      "historicalName": "魏县",
+      "modernName": "魏县",
+      "modernProvince": "河北",
+      "modernDistrict": "邯郸市魏县",
+      "modernLng": 114.93,
+      "modernLat": 36.36,
+      "note": "今魏县仍用此名，鸭梨之乡"
+    },
+    {
+      "historicalId": "guixiang",
+      "historicalName": "贵乡",
+      "modernName": "大名县",
+      "modernProvince": "河北",
+      "modernDistrict": "邯郸市大名县北（大街乡）",
+      "modernLng": 115.15,
+      "modernLat": 36.18,
+      "note": "隋魏州治贵乡在今大名县北大街乡一带，唐宋大名府前身"
+    },
+    {
+      "historicalId": "guantao",
+      "historicalName": "馆陶",
+      "modernName": "馆陶县",
+      "modernProvince": "河北",
+      "modernDistrict": "邯郸市馆陶县",
+      "modernLng": 115.40,
+      "modernLat": 36.75,
+      "note": "今馆陶县仍在原址，卫运河（永济渠后身）沿岸"
+    },
+    {
+      "historicalId": "linqing-guan",
+      "historicalName": "临清关",
+      "modernName": "临西县",
+      "modernProvince": "河北",
+      "modernDistrict": "邢台市临西县",
+      "modernLng": 115.50,
+      "modernLat": 36.87,
+      "note": "运河（永济渠后身）东西分流处，临西/临清（山东）以运河为界"
+    },
+    {
+      "historicalId": "qinghe",
+      "historicalName": "清河",
+      "modernName": "清河县",
+      "modernProvince": "河北",
+      "modernDistrict": "邢台市清河县",
+      "modernLng": 115.67,
+      "modernLat": 37.07,
+      "note": "今清河县仍是运河重镇，武松故乡（清河武大郎原型争议地）"
+    },
+    {
+      "historicalId": "changhe",
+      "historicalName": "长河",
+      "modernName": "德州市",
+      "modernProvince": "山东",
+      "modernDistrict": "德州市德城区",
+      "modernLng": 116.30,
+      "modernLat": 37.45,
+      "note": "京沪铁路与京杭运河交汇点，山东北大门"
+    },
+    {
+      "historicalId": "hejian",
+      "historicalName": "河间",
+      "modernName": "河间市",
+      "modernProvince": "河北",
+      "modernDistrict": "沧州市河间市",
+      "modernLng": 116.34,
+      "modernLat": 38.45,
+      "note": "今河间市仍存，河间府署为全国重点文保，献王刘德（汉代）整理诗经故地"
+    },
+    {
+      "historicalId": "qingchi",
+      "historicalName": "清池",
+      "modernName": "沧州市",
+      "modernProvince": "河北",
+      "modernDistrict": "沧州市运河区/新华区",
+      "modernLng": 116.84,
+      "modernLat": 38.30,
+      "note": "今沧州市区，京杭大运河穿城，铁狮子（后周）在旧城"
+    },
+    {
+      "historicalId": "pingshu",
+      "historicalName": "平舒",
+      "modernName": "大城县",
+      "modernProvince": "河北",
+      "modernDistrict": "廊坊市大城县",
+      "modernLng": 116.57,
+      "modernLat": 38.71,
+      "note": "今大城县，红木家具与摩配产业集中地"
+    },
+    {
+      "historicalId": "yongnu-sanchakou",
+      "historicalName": "雍奴·三岔口",
+      "modernName": "天津市",
+      "modernProvince": "天津",
+      "modernDistrict": "红桥区三岔河口",
+      "modernLng": 117.20,
+      "modernLat": 39.13,
+      "note": "三岔河口仍是天津发源地，望海楼教堂、天津之眼摩天轮所在"
+    },
+    {
+      "historicalId": "anci",
+      "historicalName": "安次",
+      "modernName": "廊坊市广阳区",
+      "modernProvince": "河北",
+      "modernDistrict": "廊坊市广阳区",
+      "modernLng": 116.69,
+      "modernLat": 39.51,
+      "note": "廊坊市主城区，京沪铁路枢纽"
+    },
+    {
+      "historicalId": "luxian",
+      "historicalName": "潞县",
+      "modernName": "北京市通州区",
+      "modernProvince": "北京",
+      "modernDistrict": "通州区",
+      "modernLng": 116.66,
+      "modernLat": 39.91,
+      "note": "北京城市副中心·通州大运河森林公园（北运河永济渠段）"
+    },
+    {
+      "historicalId": "jixian",
+      "historicalName": "蓟县",
+      "modernName": "北京市西城区",
+      "modernProvince": "北京",
+      "modernDistrict": "西城区广安门内/法源寺一带",
+      "modernLng": 116.36,
+      "modernLat": 39.93,
+      "note": "隋涿郡蓟县治在今广安门一带·法源寺（唐悯忠寺前身）即蓟城东门所在"
+    }
+  ]
+}

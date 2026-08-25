@@ -1,0 +1,121 @@
+{
+  "id": "yongji-canal-flythrough-v2",
+  "label": "循舟记 · 永济渠飞行镜头 v2（按四大航段）",
+  "version": 2,
+  "createdAt": "2026-08-12T21:30:00",
+  "basedOn": "《中国运河与漕运研究·隋唐卷》第一编 隋代编 pp.123-132",
+  "totalDurationSec": 48,
+  "structure": "四幕结构：①黄河漕运母题（共线段）②分流（洛口渡河入沁口）③河北航段（沁口→汲县→馆陶→独流口四大节点）④终点叙事（蓟县临朔宫）",
+  "rules": {
+    "transition": "jumpTo + map.once('idle', next)",
+    "noEaseTo": true,
+    "noFlyTo": true,
+    "frameHoldMs": 5000,
+    "rationale": "录制镜头禁用 easeTo/flyTo——运动模糊 + 帧时序不确定，无法稳定出片。每帧 jumpTo 后等 idle 事件确保瓦片加载完毕。"
+  },
+  "acts": [
+    {
+      "act": 1,
+      "title": "第一幕·黄河漕运母题（共线起点）",
+      "frames": ["f01-luoyang-establish", "f02-luokou-shared"]
+    },
+    {
+      "act": 2,
+      "title": "第二幕·南北分流",
+      "frames": ["f03-qinkou-divergence"]
+    },
+    {
+      "act": 3,
+      "title": "第三幕·河北航段四大节点",
+      "frames": ["f04-xiaoyuancun-works", "f05-jixian-newhead", "f06-guantao-baigou", "f07-duliukou-turn"]
+    },
+    {
+      "act": 4,
+      "title": "第四幕·终点叙事·蓟县临朔宫",
+      "frames": ["f08-luxian-confluence", "f09-jixian-linshuo-finale"]
+    }
+  ],
+  "frames": [
+    {
+      "id": "f01-luoyang-establish",
+      "center": [112.45, 34.62],
+      "zoom": 8.2,
+      "pitch": 35,
+      "bearing": 35,
+      "act": 1,
+      "note": "起幅·隋东都洛阳全景。永济渠与通济渠的共线起点——自东都西苑经阳渠至洛口入黄河。pitch 35° 给足俯瞰古都史诗感"
+    },
+    {
+      "id": "f02-luokou-shared",
+      "center": [113.00, 34.78],
+      "zoom": 9.5,
+      "pitch": 28,
+      "bearing": 35,
+      "act": 1,
+      "note": "洛口·两渠共线段终点。洛水入黄河处（今河南巩义东北）。从此渡河，南走板渚入通济渠，北走沁口入永济渠——隋大业七年炀帝龙舟即由此渡河入永济渠北上"
+    },
+    {
+      "id": "f03-qinkou-divergence",
+      "center": [113.40, 35.10],
+      "zoom": 11,
+      "pitch": 24,
+      "bearing": 35,
+      "act": 2,
+      "note": "沁口·武陟·永济渠黄河以北的真正起点。'引沁水南达于河'后，沿沁水枝津开渠北上。颜师古以唐代水文质疑班固汉代沁水'至荥阳入河'之说，实为时代错置"
+    },
+    {
+      "id": "f04-xiaoyuancun-works",
+      "center": [113.55, 35.20],
+      "zoom": 12,
+      "pitch": 20,
+      "bearing": 35,
+      "act": 3,
+      "note": "武陟小原村/红荆口·沁口航段三大工程核心区。①分水工程（小原村东北）②拓宽加深至红荆口水道 ③开挖红荆口至汲县入白沟新渠。沁水含沙量超黄河，'束水冲沙'是关键难题"
+    },
+    {
+      "id": "f05-jixian-newhead",
+      "center": [114.06, 35.40],
+      "zoom": 10.5,
+      "pitch": 22,
+      "bearing": 35,
+      "act": 3,
+      "note": "汲县·永济渠四大航段之二。隋汲郡治。沁口段唐代淤塞后，永济渠在黄河北岸的起点被迫迁至此地。今河南卫辉"
+    },
+    {
+      "id": "f06-guantao-baigou",
+      "center": [115.40, 36.75],
+      "zoom": 9.5,
+      "pitch": 22,
+      "bearing": 35,
+      "act": 3,
+      "note": "馆陶·永济渠四大航段之三。沿汉魏北朝白沟故道北上。严耕望：'永济渠之工程实多循汉魏北朝之旧河道'"
+    },
+    {
+      "id": "f07-duliukou-turn",
+      "center": [116.92, 38.83],
+      "zoom": 10.5,
+      "pitch": 20,
+      "bearing": 45,
+      "act": 3,
+      "note": "独流口·永济渠四大航段之四。接潞水北上蓟县的关键折转口。今天津静海独流镇。bearing 45° 让折转走向更明显"
+    },
+    {
+      "id": "f08-luxian-confluence",
+      "center": [116.66, 39.91],
+      "zoom": 10.5,
+      "pitch": 22,
+      "bearing": 60,
+      "act": 4,
+      "note": "潞县·潞水与永济渠交汇处（今北京通州）。距终点蓟县仅一步之遥。bearing 60° 让运河与潞水的交汇角度入画"
+    },
+    {
+      "id": "f09-jixian-linshuo-finale",
+      "center": [116.36, 39.93],
+      "zoom": 11,
+      "pitch": 32,
+      "bearing": 90,
+      "act": 4,
+      "note": "收幅·隋涿郡治蓟县（今天北京西城广安门一带）。永济渠终点——四证据链锁定：政区沿革+幽州刺史治所+炀帝临朔宫下榻+里程反推 2200 里。大业七年征高句丽水陆军资集结地。bearing 90° 给'正北朝南'的英雄俯瞰，pitch 32° 回到史诗感"
+    }
+  ]
+}

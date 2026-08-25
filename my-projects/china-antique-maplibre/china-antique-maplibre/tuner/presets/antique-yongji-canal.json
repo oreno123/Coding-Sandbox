@@ -1,0 +1,64 @@
+{
+  "id": "antique-yongji-canal",
+  "label": "循舟记 · 永济渠 v1",
+  "version": 2,
+  "savedAt": "2026-08-12T17:30:00",
+  "camera": {
+    "center": [114.5, 37.0],
+    "zoom": 6.0,
+    "pitch": 18,
+    "bearing": 35
+  },
+  "maplibre": {
+    "backgroundColor": "#d8cdb5",
+    "terrainExaggeration": 0.8,
+    "satellite": {
+      "opacity": 0.55,
+      "saturation": -0.18,
+      "contrast": 0.0,
+      "brightnessMin": 0.1,
+      "brightnessMax": 0.94,
+      "hueRotate": 8
+    },
+    "hillshade": {
+      "exaggeration": 0.15,
+      "illuminationDirection": 315,
+      "shadowColor": "#3a322a",
+      "highlightColor": "#f4ede0",
+      "accentColor": "#807665"
+    },
+    "water": {
+      "lakeFill": "rgba(48,100,130,0.85)",
+      "lakeOutline": "rgba(80,105,115,0.8)",
+      "riverLevel3": "rgba(40,88,120,0.5)",
+      "riverLevel2": "rgba(38,85,118,0.85)",
+      "riverLevel1": "rgba(34,80,115,0.95)",
+      "highlightRiver": "rgba(35,65,120,1)",
+      "riverL3Width": 1.0,
+      "riverL2Width": 1.8,
+      "riverL1Width": 2.4,
+      "highlightWidth": 3.6
+    }
+  },
+  "css": {
+    "sepia": 0.18,
+    "saturate": 0.92,
+    "contrast": 1.08,
+    "brightness": 0.98,
+    "hueRotate": -2,
+    "warmTintAlpha": 0.08,
+    "warmTintColor": "#8a7548",
+    "vignetteStrength": 0.22
+  },
+  "ui": {
+    "showWater": true,
+    "showHighlight": true,
+    "showCities": true,
+    "showRef": false
+  },
+  "cities": {
+    "dataFile": "assets/yongji-canal-sites.json",
+    "halfKm": 22,
+    "renderMode": "fill-extrusion"
+  }
+}

@@ -1,0 +1,272 @@
+[
+  {
+    "id": "luoyang",
+    "name": "洛阳",
+    "lng": 112.45,
+    "lat": 34.62,
+    "tier": "capital",
+    "modelType": "commandery",
+    "halfKm": 30,
+    "note": "隋东都·永济渠与通济渠的共线起点。自东都西苑经阳渠至洛口入黄河，是两渠共同航段。大业四年（608）诏发河北诸郡男女百余万开永济渠，'引沁水南达于河，北通涿郡'。大业七年（611）炀帝自江都乘龙舟沿通济渠入淮渡河后，沿永济渠抵达蓟县临朔宫"
+  },
+  {
+    "id": "hanjia-cang",
+    "name": "含嘉仓",
+    "lng": 112.47,
+    "lat": 34.68,
+    "tier": "station",
+    "modelType": "station",
+    "halfKm": 4,
+    "note": "隋大业元年（605）营建·洛阳北城漕仓，考古发掘出 259 个仓窖，现存遗址公园"
+  },
+  {
+    "id": "huiluo-cang",
+    "name": "回洛仓",
+    "lng": 112.43,
+    "lat": 34.70,
+    "tier": "station",
+    "modelType": "station",
+    "halfKm": 4,
+    "note": "隋大业二年（606）建·洛阳城北七里，《隋书·食货志》：'置回洛仓于洛阳北七里'，2014 年考古发掘确认仓城"
+  },
+  {
+    "id": "wuzhi",
+    "name": "武陟",
+    "lng": 113.40,
+    "lat": 35.10,
+    "tier": "station",
+    "modelType": "station",
+    "halfKm": 5,
+    "note": "沁口·永济渠黄河以北的真正起点。三大工程：①武陟小原村分水工程（控沁水南下入河流量，增沁水枝津入白沟流量）②拓宽加深小原村至红荆口水道 ③开挖红荆口至汲县入白沟新渠。沁水含沙量超黄河，唐代淤塞后起点迁汲县。隋属河内郡"
+  },
+  {
+    "id": "xiaoyuancun",
+    "name": "小原村",
+    "lng": 113.55,
+    "lat": 35.20,
+    "tier": "station",
+    "modelType": "station",
+    "halfKm": 4,
+    "note": "武陟小原村·永济渠渠首三大工程核心区。①分水工程（村东北）：控沁水南下入河流量，增沁水枝津入白沟流量 ②拓宽加深小原村至红荆口水道 ③开挖红荆口至汲县入白沟新渠。沁水含沙量超黄河，'束水冲沙'为关键难题"
+  },
+  {
+    "id": "jixian-wei",
+    "name": "汲县",
+    "lng": 114.06,
+    "lat": 35.40,
+    "tier": "medium",
+    "modelType": "commandery",
+    "halfKm": 16,
+    "note": "隋汲郡治·永济渠四大航段之一（沁口/汲县/馆陶/独流口）。沁口段唐代淤塞后，永济渠在黄河北岸的起点被迫迁至此地。今河南卫辉"
+  },
+  {
+    "id": "heyang-cang",
+    "name": "河阳仓",
+    "lng": 112.78,
+    "lat": 34.90,
+    "tier": "station",
+    "modelType": "station",
+    "halfKm": 4,
+    "note": "黄河北岸河阳三城·隋漕仓，《通典·食货》载河阳仓为东都漕运节点。河阳桥是永济渠跨黄河要道"
+  },
+  {
+    "id": "liyang-cang",
+    "name": "黎阳仓",
+    "lng": 114.36,
+    "lat": 35.66,
+    "tier": "medium",
+    "modelType": "commandery",
+    "halfKm": 16,
+    "note": "今河南浚县·大伾山北麓。隋黎阳仓为永济渠漕粮中转核心，已发掘出 8 个仓窖遗址，与含嘉仓并称'隋代两大漕仓'"
+  },
+  {
+    "id": "dapi-shan",
+    "name": "大伾山",
+    "lng": 114.35,
+    "lat": 35.68,
+    "tier": "small",
+    "modelType": "ordos",
+    "halfKm": 6,
+    "note": "北魏至唐宋摩崖石刻群·22 米弥勒大石佛（后赵时期开凿，早于乐山大佛）。黎阳仓在大伾山北麓，永济渠边的宗教文化地标"
+  },
+  {
+    "id": "weixian",
+    "name": "卫县",
+    "lng": 114.17,
+    "lat": 35.61,
+    "tier": "small",
+    "modelType": "commandery",
+    "halfKm": 8,
+    "note": "隋汲郡卫县·永济渠经其东。今河南淇县东，朝歌故地"
+  },
+  {
+    "id": "yecheng-ruins",
+    "name": "邺城遗址",
+    "lng": 114.60,
+    "lat": 36.34,
+    "tier": "medium",
+    "modelType": "ordos",
+    "halfKm": 16,
+    "note": "六朝古都（曹魏后赵东魏北齐）·北周大象二年（580）杨坚毁邺迁治安阳，隋大业时已为废墟遗址。永济渠西望邺城，地理与记忆标志"
+  },
+  {
+    "id": "guixiang",
+    "name": "贵乡",
+    "lng": 115.15,
+    "lat": 36.18,
+    "tier": "medium",
+    "modelType": "commandery",
+    "halfKm": 16,
+    "note": "隋魏州治贵乡县·《元和郡县图志》载魏州治贵乡。今河北大名县北，永济渠中段最核心治所（地位高于魏县）"
+  },
+  {
+    "id": "xinxiang",
+    "name": "新乡",
+    "lng": 113.88,
+    "lat": 35.30,
+    "tier": "small",
+    "modelType": "commandery",
+    "halfKm": 8,
+    "note": "隋开皇六年（586）复置新乡县，傍渠"
+  },
+  {
+    "id": "neihuang",
+    "name": "内黄",
+    "lng": 114.90,
+    "lat": 35.97,
+    "tier": "small",
+    "modelType": "commandery",
+    "halfKm": 8,
+    "note": "汉旧县·隋属汲郡，渠经其境"
+  },
+  {
+    "id": "weixian-hebei",
+    "name": "魏县",
+    "lng": 114.93,
+    "lat": 36.36,
+    "tier": "small",
+    "modelType": "commandery",
+    "halfKm": 10,
+    "note": "隋魏州武阳郡·渠漕经县境"
+  },
+  {
+    "id": "guantao",
+    "name": "馆陶",
+    "lng": 115.40,
+    "lat": 36.75,
+    "tier": "medium",
+    "modelType": "commandery",
+    "halfKm": 18,
+    "note": "隋武阳郡·永济渠重要漕渡，唐设永济县于此段"
+  },
+  {
+    "id": "qinghe",
+    "name": "清河",
+    "lng": 115.67,
+    "lat": 37.07,
+    "tier": "medium",
+    "modelType": "commandery",
+    "halfKm": 16,
+    "note": "隋清河郡治·贝州。《元和郡县图志》：永济渠在县西五里"
+  },
+  {
+    "id": "linqing-guan",
+    "name": "临清关",
+    "lng": 115.50,
+    "lat": 36.87,
+    "tier": "pass",
+    "modelType": "pass",
+    "halfKm": 6,
+    "note": "隋代漕运检查关·《隋书·食货志》载。今河北临西（临清县是唐大历七年才置，隋时此地属清河/贝州，但临清关作为漕关隋已有）。永济渠中段稽查枢纽"
+  },
+  {
+    "id": "changhe",
+    "name": "长河",
+    "lng": 116.30,
+    "lat": 37.45,
+    "tier": "small",
+    "modelType": "commandery",
+    "halfKm": 8,
+    "note": "隋德州平原郡·开皇六年改长河县，傍渠"
+  },
+  {
+    "id": "hejian",
+    "name": "河间",
+    "lng": 116.34,
+    "lat": 38.45,
+    "tier": "medium",
+    "modelType": "commandery",
+    "halfKm": 16,
+    "note": "隋河间郡治·瀛州。永济渠东侧最重要的行政军事枢纽，《隋书·地理志》河间郡领县十三"
+  },
+  {
+    "id": "qingchi",
+    "name": "清池",
+    "lng": 116.84,
+    "lat": 38.30,
+    "tier": "medium",
+    "modelType": "commandery",
+    "halfKm": 16,
+    "note": "隋渤海郡·沧州治所，渠经城东"
+  },
+  {
+    "id": "pingshu",
+    "name": "平舒",
+    "lng": 116.57,
+    "lat": 38.71,
+    "tier": "small",
+    "modelType": "commandery",
+    "halfKm": 8,
+    "note": "隋涿郡平舒县·永济渠尾闾段。今河北大城"
+  },
+  {
+    "id": "yongnu-sanchakou",
+    "name": "雍奴·三岔口",
+    "lng": 117.20,
+    "lat": 39.13,
+    "tier": "large",
+    "modelType": "commandery",
+    "halfKm": 22,
+    "note": "隋涿郡雍奴县·子牙河、漳水交汇入海河处，后世直沽/天津前身，漕运枢纽"
+  },
+  {
+    "id": "duliukou",
+    "name": "独流口",
+    "lng": 116.92,
+    "lat": 38.83,
+    "tier": "pass",
+    "modelType": "pass",
+    "halfKm": 6,
+    "note": "永济渠四大航段之四·接潞水北上蓟县的关键折转口。今天津静海独流镇。'独流'地得名于宋代独流川，隋代为雍奴入潞之要冲"
+  },
+  {
+    "id": "luxian",
+    "name": "潞县",
+    "lng": 116.66,
+    "lat": 39.91,
+    "tier": "small",
+    "modelType": "commandery",
+    "halfKm": 8,
+    "note": "隋涿郡·潞水（今潮白河）与永济渠交汇处"
+  },
+  {
+    "id": "anci",
+    "name": "安次",
+    "lng": 116.69,
+    "lat": 39.51,
+    "tier": "small",
+    "modelType": "commandery",
+    "halfKm": 8,
+    "note": "隋涿郡安次县·永济渠经其境。今河北廊坊广阳区"
+  },
+  {
+    "id": "jixian",
+    "name": "蓟县",
+    "lng": 116.36,
+    "lat": 39.93,
+    "tier": "large",
+    "modelType": "commandery",
+    "halfKm": 22,
+    "note": "隋涿郡治·永济渠终点（非汉代涿县，四证据链：①政区沿革——大业三年改州为郡后涿郡治蓟县 ②'自晋至隋幽州刺史皆以蓟为治所' ③大业七年炀帝乘龙舟至'涿郡临朔宫'即蓟县临朔宫 ④里程反推：洛阳到蓟县 2200+ 里吻合'二千余里'，到涿县仅 1800 里对不上）。大业七年征高句丽水陆军资集结地"
+  }
+]
